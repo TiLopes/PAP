@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const { sequelize } = require("../models");
 var initModels = require("../models/init-models");
 var models = initModels(sequelize);
-const User = models.user;
+const Condominio = models.Condominio;
 require("dotenv").config({
   path: "./config/.env",
 });
@@ -66,21 +66,49 @@ module.exports.signupGET = (req, res) => {
   res.status(200).json({ success: true });
 };
 
+// module.exports.signupPOST = async (req, res) => {
+//   const { nomeCond, nomeAdmin, email, password, nif, morada, codPostal } = req.body;
+
+//   try {
+//     const user = await User.create({ email: email, password: password });
+//     res.status(200).json({
+//       user: {
+//         group_id: user.group_id,
+//         id: user.id,
+//         email: user.email,
+//       },
+//     });
+//   } catch (err) {
+//     const errors = handleErrors(err);
+//     res.status(400).json({ errors });
+//   }
+// };
+
 module.exports.signupPOST = async (req, res) => {
-  const { email, password } = req.body;
+  const { nomeCond, nomeAdmin, email, password, nif, morada, codPostal } =
+    req.body;
 
   try {
-    const user = await User.create({ email: email, password: password });
+    const condominio = await Condominio.create({
+      nome: nomeCond,
+      nomeAdministrador: nomeAdmin,
+      email,
+      password,
+      nif,
+      morada,
+      codPostal,
+    });
     res.status(200).json({
-      user: {
-        group_id: user.group_id,
-        id: user.id,
-        email: user.email,
-      },
+      nome: condominio.nome,
+      nomeAdministrador: condominio.nomeAdministrador,
+      email: condominio.email,
+      nif: condominio.nif,
+      morada: condominio.morada,
+      codPostal: condominio.codPostal,
     });
   } catch (err) {
-    const errors = handleErrors(err);
-    res.status(400).json({ errors });
+    console.log(err);
+    res.status(400).json({ err });
   }
 };
 
@@ -90,14 +118,15 @@ module.exports.loginGET = (req, res) => {
 };
 
 module.exports.loginPOST = async (req, res) => {
-  const { email, password } = req.body;
+  const email = req.body.email;
+  const password = req.body.password;
 
   try {
-    const user = await User.login(email, password);
+    const condominio = await Condominio.login(email, password);
 
     // tokens creation
     const accessToken = jwt.sign(
-      { id: user.id, group_id: user.group_id },
+      { id: condominio.id, group_id: condominio.group_id },
       process.env.ACCESS_TOKEN_SECRET,
       { expiresIn: "1h" }
     );
@@ -110,17 +139,15 @@ module.exports.loginPOST = async (req, res) => {
       }
     );
 
-    await User.saveToken(user.id, accessToken);
+    await Condominio.saveToken(condominio.id, accessToken);
 
     res.status(200).json({
-      user: {
-        id: user.id,
-        group_id: user.group_id,
-        email: user.email,
-        accessToken: {
-          token: accessToken,
-          expires: accDate,
-        },
+      id: condominio.id,
+      group_id: condominio.group_id,
+      email: condominio.email,
+      accessToken: {
+        token: accessToken,
+        expires: accDate,
       },
     });
   } catch (err) {

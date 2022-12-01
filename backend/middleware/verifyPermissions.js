@@ -1,8 +1,8 @@
 const { sequelize } = require("../models");
 var initModels = require("../models/init-models");
 var models = initModels(sequelize);
-const User = models.user;
-const groupPerm = models.group_permissions;
+const Condominio = models.Condominio;
+const groupPerm = models.GroupPermissions;
 
 const verifyPermission = async (req, res, next) => {
   const token = req.header("auth-token");
@@ -11,16 +11,16 @@ const verifyPermission = async (req, res, next) => {
     return res.status(403).json({ error: "Invalid token" });
   }
 
-  const user = await User.findOne({ where: { authToken: token } });
-  console.log(user.id);
+  const condominio = await Condominio.findOne({ where: { authToken: token } });
+  console.log(condominio.id);
 
-  if (!user) {
+  if (!condominio) {
     return res.status(403).json({ error: "Invalid user token" });
   }
 
   const acl = await groupPerm
     .findAll(
-      { where: { group_id: user.group_id } },
+      { where: { group_id: condominio.group_id } },
       { attributes: ["permission_id"] }
     )
     .then((mapACL) => {

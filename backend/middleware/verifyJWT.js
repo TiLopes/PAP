@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const { sequelize } = require("../models");
 var initModels = require("../models/init-models");
 var models = initModels(sequelize);
-const User = models.user;
+const Condominio = models.Condominio;
 require("dotenv").config({
   path: "./config/.env",
 });
@@ -22,8 +22,10 @@ const verifyJWT = (req, res, next) => {
         console.log(err.message);
         return res.status(403).json({ error: "Token is invalid" });
       }
-      const user = await User.findOne({ where: { authToken: token } });
-      if (!user) {
+      const condominio = await Condominio.findOne({
+        where: { authToken: token },
+      });
+      if (!condominio) {
         return res.status(401).json({ error: "Invalid user token" });
       }
 

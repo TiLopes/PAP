@@ -5,7 +5,6 @@
     "database": "pap",
     "host": "localhost",
     "dialect": "mysql",
-    "timezone": "+01:00",
     "logging": false
   },
   "test": {
