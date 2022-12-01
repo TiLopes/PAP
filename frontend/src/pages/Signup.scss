@@ -1,0 +1,33 @@
+.signup {
+  form {
+    border: #dddddd 1px solid;
+    border-radius: 10px;
+    display: flex;
+    padding: 2rem;
+    max-width: 600px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="password"] {
+      border: #dddddd 1px solid;
+      border-radius: 10px;
+      padding: 0.5rem;
+      width: 100%;
+      outline: none;
+      width: 100%;
+      display: block;
+      position: relative;
+
+      &:not(:last-child) {
+        margin-bottom: 1rem;
+      }
+    }
+
+    .half-input {
+      width: calc((95%) / 2);
+    }
+  }
+}

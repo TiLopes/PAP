@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  font-family: "Lato", Arial, Helvetica, sans-serif;
+  font-family: "Quicksand", Arial, Helvetica, sans-serif;
   font-size: 1rem;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -21,7 +21,6 @@ html,
 body {
   min-width: 100vw;
   min-height: 100vh;
-  height: 100%;
 }
 
 #root {

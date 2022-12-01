@@ -1,14 +1,26 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./pages/App";
-import "./index.css";
+import Frontpage from "./pages/Frontpage";
+import LoginCondominio from "./pages/LoginCondominio";
+import SignupCondominio from "./pages/SignupCondominio";
+import "./index.scss";
 import { createBrowserRouter, RouterProvider, Route } from "react-router-dom";
 import Error from "./pages/Error";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: <Frontpage />,
+    errorElement: <Error />,
+  },
+  {
+    path: "login/condominio",
+    element: <LoginCondominio />,
+    errorElement: <Error />,
+  },
+  {
+    path: "signup/condominio",
+    element: <SignupCondominio />,
     errorElement: <Error />,
   },
 ]);
