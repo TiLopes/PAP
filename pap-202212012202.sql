@@ -1,15 +1,13 @@
-CREATE DATABASE  IF NOT EXISTS `pap` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
-USE `pap`;
--- MariaDB dump 10.19  Distrib 10.4.24-MariaDB, for Win64 (AMD64)
+-- MySQL dump 10.13  Distrib 8.0.19, for Win64 (x86_64)
 --
--- Host: 127.0.0.1    Database: pap
+-- Host: localhost    Database: pap
 -- ------------------------------------------------------
--- Server version	10.4.24-MariaDB
+-- Server version	5.5.5-10.4.24-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -23,16 +21,23 @@ USE `pap`;
 
 DROP TABLE IF EXISTS `condominio`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `condominio` (
-  `idcondominio` int(11) NOT NULL,
-  `nif` decimal(9,0) NOT NULL DEFAULT 0,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `nome` varchar(100) NOT NULL,
   `nomeAdministrador` varchar(100) NOT NULL,
   `email` varchar(100) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `nif` decimal(9,0) NOT NULL DEFAULT 0,
   `morada` varchar(100) NOT NULL,
   `codPostal` varchar(8) NOT NULL DEFAULT '0000-000',
-  PRIMARY KEY (`idcondominio`)
+  `group_id` int(11) NOT NULL DEFAULT 999,
+  `authToken` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `condominio_un_email` (`email`),
+  UNIQUE KEY `condominio_un_nif` (`nif`),
+  KEY `condominio_FK` (`group_id`),
+  CONSTRAINT `condominio_FK` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -51,19 +56,24 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `condomino`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `condomino` (
   `idcondomino` int(11) NOT NULL AUTO_INCREMENT,
   `email` varchar(100) NOT NULL,
   `nome` varchar(45) NOT NULL,
   `nif` decimal(9,0) NOT NULL,
-  `telemovel` decimal(9,0) DEFAULT NULL,
+  `telemovel` decimal(9,0) NOT NULL DEFAULT 0,
   `fracao` varchar(2) NOT NULL,
   `andar` varchar(20) NOT NULL,
   `morada` varchar(100) NOT NULL,
   `idcondominio` int(11) NOT NULL,
   `codPostal` varchar(8) NOT NULL DEFAULT '0000-000',
-  PRIMARY KEY (`idcondomino`)
+  `group_id` int(11) NOT NULL DEFAULT 1,
+  PRIMARY KEY (`idcondomino`),
+  UNIQUE KEY `condomino_un_email` (`email`),
+  UNIQUE KEY `condomino_un_nif` (`nif`),
+  KEY `condomino_FK` (`group_id`),
+  CONSTRAINT `condomino_FK` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -82,7 +92,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `group_permissions`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `group_permissions` (
   `group_id` int(11) NOT NULL,
   `permission_id` varchar(50) NOT NULL,
@@ -100,6 +110,7 @@ CREATE TABLE `group_permissions` (
 
 LOCK TABLES `group_permissions` WRITE;
 /*!40000 ALTER TABLE `group_permissions` DISABLE KEYS */;
+INSERT INTO `group_permissions` VALUES (999,'*:*');
 /*!40000 ALTER TABLE `group_permissions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -109,7 +120,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `groups`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `groups` (
   `id` int(11) NOT NULL,
   `name` varchar(45) NOT NULL,
@@ -124,6 +135,7 @@ CREATE TABLE `groups` (
 
 LOCK TABLES `groups` WRITE;
 /*!40000 ALTER TABLE `groups` DISABLE KEYS */;
+INSERT INTO `groups` VALUES (999,'administrator'),(1,'client');
 /*!40000 ALTER TABLE `groups` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -133,7 +145,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `permissions`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `permissions` (
   `id` varchar(50) NOT NULL,
   `description` varchar(255) NOT NULL,
@@ -148,6 +160,7 @@ CREATE TABLE `permissions` (
 
 LOCK TABLES `permissions` WRITE;
 /*!40000 ALTER TABLE `permissions` DISABLE KEYS */;
+INSERT INTO `permissions` VALUES ('*:*','Todas permissões');
 /*!40000 ALTER TABLE `permissions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -157,7 +170,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `email` varchar(255) NOT NULL,
@@ -182,6 +195,10 @@ LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Dumping routines for database 'pap'
+--
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -192,4 +209,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-11-20 19:02:05
+-- Dump completed on 2022-12-01 22:02:04
