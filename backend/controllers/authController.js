@@ -3,6 +3,7 @@ const { sequelize } = require("../models");
 var initModels = require("../models/init-models");
 var models = initModels(sequelize);
 const Condominio = models.Condominio;
+const Condomino = models.Condomino;
 require("dotenv").config({
   path: "./config/.env",
 });
@@ -85,27 +86,55 @@ module.exports.signupGET = (req, res) => {
 // };
 
 module.exports.signupPOST = async (req, res) => {
-  const { nomeCond, nomeAdmin, email, password, nif, morada, codPostal } =
-    req.body;
+  const {
+    nomeCond,
+    nomeAdmin,
+    email,
+    password,
+    nif,
+    morada,
+    codPostal,
+    userType,
+  } = req.body;
 
   try {
-    const condominio = await Condominio.create({
-      nome: nomeCond,
-      nomeAdministrador: nomeAdmin,
-      email,
-      password,
-      nif,
-      morada,
-      codPostal,
-    });
-    res.status(200).json({
-      nome: condominio.nome,
-      nomeAdministrador: condominio.nomeAdministrador,
-      email: condominio.email,
-      nif: condominio.nif,
-      morada: condominio.morada,
-      codPostal: condominio.codPostal,
-    });
+    if (userType === "condominio") {
+      const condominio = await Condominio.create({
+        nome: nomeCond,
+        nomeAdministrador: nomeAdmin,
+        email,
+        password,
+        nif,
+        morada,
+        codPostal,
+      });
+      res.status(200).json({
+        nome: condominio.nome,
+        nomeAdministrador: condominio.nomeAdministrador,
+        email: condominio.email,
+        nif: condominio.nif,
+        morada: condominio.morada,
+        codPostal: condominio.codPostal,
+      });
+    } else {
+      const condomino = await Condomino.create({
+        nome: nomeCond,
+        nomeAdministrador: nomeAdmin,
+        email,
+        password,
+        nif,
+        morada,
+        codPostal,
+      });
+      res.status(200).json({
+        nome: condomino.nome,
+        nomeAdministrador: condomino.nomeAdministrador,
+        email: condomino.email,
+        nif: condomino.nif,
+        morada: condomino.morada,
+        codPostal: condomino.codPostal,
+      });
+    }
   } catch (err) {
     console.log(err);
     res.status(400).json({ err });

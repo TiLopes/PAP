@@ -3,7 +3,9 @@ const app = express();
 const authRoutes = require("./routes/auth"); // chamar a rota
 const protectedRoutes = require("./routes/protected");
 const db = require("./models");
+const cors = require("cors");
 
+app.use(cors());
 app.use(express.json());
 app.use(express.static(__dirname + "/public"));
 
