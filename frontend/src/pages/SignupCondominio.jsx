@@ -1,13 +1,7 @@
 import "./Signup.scss";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import axios from "axios";
-import {
-  redirect,
-  Route,
-  Navigate,
-  Routes,
-  useNavigate,
-} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function SignupCondominio() {
   let navigate = useNavigate();
@@ -62,6 +56,27 @@ function SignupCondominio() {
           validate={(values) => {
             const errors = {};
 
+            if (!values.nome) {
+              errors.nome = "Nome do condomínio é obrigatório preencher";
+            }
+
+            if (!values.nomeAdmin) {
+              errors.nomeAdmin =
+                "Nome do administrador é obrigatório preencher";
+            }
+
+            if (!values.email) {
+              errors.email = "Email é obrigatório preencher";
+            }
+
+            if (!values.password) {
+              errors.password = "Password é obrigatória preencher";
+            }
+
+            if (!values.morada) {
+              errors.morada = "Morada é obrigatória preencher";
+            }
+
             if (values.nif === "") {
               errors.nif = "NIF é obrigatório preencher";
             }
@@ -111,7 +126,13 @@ function SignupCondominio() {
               </div>
               <div className="w-1/4">
                 <label htmlFor="nif">NIF</label>
-                <Field type="text" name="nif" maxLength={9} size={9}></Field>
+                <Field
+                  type="text"
+                  name="nif"
+                  maxLength={9}
+                  size={9}
+                  placeholder="123456789"
+                ></Field>
               </div>
               <label htmlFor="nomeAdmin">Nome do administrador</label>
               <Field type="text" name="nomeAdmin"></Field>
@@ -121,7 +142,7 @@ function SignupCondominio() {
               <Field type="password" name="password" />
               <div className="w-4/6 mb-4">
                 <label htmlFor="morada">Morada</label>
-                <Field type="text" name="morada" />
+                <Field type="text" name="morada" placeholder="Rua da Água, 2" />
               </div>
               <div className="w-1/4">
                 <label htmlFor="codPostal">Cód. Postal</label>
@@ -136,37 +157,37 @@ function SignupCondominio() {
               <ErrorMessage
                 name="nome"
                 component="div"
-                className="w-full text-center"
+                className="w-full text-center error-message"
               />
               <ErrorMessage
                 name="nif"
                 component="div"
-                className="w-full text-center"
+                className="w-full text-center error-message"
               />
               <ErrorMessage
                 name="nomeAdmin"
                 component="div"
-                className="w-full text-center"
+                className="w-full text-center error-message"
               />
               <ErrorMessage
                 name="email"
                 component="div"
-                className="w-full text-center"
+                className="w-full text-center error-message"
               />
               <ErrorMessage
                 name="password"
                 component="div"
-                className="w-full text-center"
+                className="w-full text-center error-message"
               />
               <ErrorMessage
                 name="morada"
                 component="div"
-                className="w-full text-center"
+                className="w-full text-center error-message"
               />
               <ErrorMessage
                 name="codPostal"
                 component="div"
-                className="w-full text-center"
+                className="w-full text-center error-message"
               />
               <button
                 type="submit"

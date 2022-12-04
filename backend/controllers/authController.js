@@ -149,36 +149,39 @@ module.exports.loginGET = (req, res) => {
 module.exports.loginPOST = async (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
+  const userType = req.body.userType;
 
   try {
-    const condominio = await Condominio.login(email, password);
+    if (userType === "condominio") {
+      const condominio = await Condominio.login(email, password);
 
-    // tokens creation
-    const accessToken = jwt.sign(
-      { id: condominio.id, group_id: condominio.group_id },
-      process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: "1h" }
-    );
+      // tokens creation
+      const accessToken = jwt.sign(
+        { id: condominio.id, group_id: condominio.group_id },
+        process.env.ACCESS_TOKEN_SECRET,
+        { expiresIn: "1h" }
+      );
 
-    var accDate = jwt.verify(
-      accessToken,
-      process.env.ACCESS_TOKEN_SECRET,
-      (err, decodedToken) => {
-        return decodedToken.exp;
-      }
-    );
+      var accDate = jwt.verify(
+        accessToken,
+        process.env.ACCESS_TOKEN_SECRET,
+        (err, decodedToken) => {
+          return decodedToken.exp;
+        }
+      );
 
-    await Condominio.saveToken(condominio.id, accessToken);
+      await Condominio.saveToken(condominio.id, accessToken);
 
-    res.status(200).json({
-      id: condominio.id,
-      group_id: condominio.group_id,
-      email: condominio.email,
-      accessToken: {
-        token: accessToken,
-        expires: accDate,
-      },
-    });
+      res.status(200).json({
+        id: condominio.id,
+        group_id: condominio.group_id,
+        email: condominio.email,
+        accessToken: {
+          token: accessToken,
+          expires: accDate,
+        },
+      });
+    }
   } catch (err) {
     const errs = handleErrors(err);
     console.log(errs);

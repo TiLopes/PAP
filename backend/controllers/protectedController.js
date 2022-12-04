@@ -1,7 +1,7 @@
 const { sequelize } = require("../models");
 var initModels = require("../models/init-models");
 var models = initModels(sequelize);
-const User = models.user;
+const Condominio = models.Condominio;
 
 const userInfoGET = async (req, res) => {
   const user = await User.findByPk(req.params.userId, {
@@ -17,23 +17,22 @@ const userInfoGET = async (req, res) => {
 
 const personalInfoGET = async (req, res) => {
   const token = req.header("auth-token");
-  const user = await User.findOne({
+
+  const condominio = await Condominio.findOne({
     where: {
       authToken: token,
     },
   });
 
-  if (!user) {
-    return res.status(404).json({ error: "User does not exist" });
+  if (!condominio) {
+    return res.status(404).json({ error: "Condominio does not exist" });
   }
 
   res.status(200).json({
     user: {
-      id: user.id,
-      group_id: user.group_id,
-      email: user.email,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
+      id: condominio.id,
+      group_id: condominio.group_id,
+      email: condominio.email,
     },
   });
 };

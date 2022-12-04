@@ -12,25 +12,27 @@ const verifyPermission = async (req, res, next) => {
     return res.status(403).json({ error: "Invalid token" });
   }
 
-  const userType = (await Condominio.findOne({ where: { authToken: token } }))
-    ? "condominio"
-    : "condomino";
+  // const userType = (await Condominio.findOne({ where: { authToken: token } }))
+  //   ? "condominio"
+  //   : "condomino";
 
-  if (userType === "condominio") {
-    const condominio = await Condominio.findOne({
+  const condominio =
+    (await Condominio.findOne({
       where: { authToken: token },
-    });
-  } else {
-    const condomino = await Condomino.findOne({ where: { authToken: token } });
-  }
+    })) || null;
 
-  if (!condomino) {
-    return next();
+  const condomino =
+    (await Condomino.findOne({ where: { authToken: token } })) || null;
+
+  if (condominio) {
+    var groupID = condominio.group_id;
+  } else {
+    var groupID = condomino.group_id;
   }
 
   const acl = await groupPerm
     .findAll(
-      { where: { group_id: condomino.group_id } },
+      { where: { group_id: groupID } },
       { attributes: ["permission_id"] }
     )
     .then((mapACL) => {

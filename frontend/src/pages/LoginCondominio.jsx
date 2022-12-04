@@ -1,7 +1,15 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import "./Login.scss";
 
 function LoginCondominio() {
+  let navigate = useNavigate();
+
+  function Redirect() {
+    let path = `/administracao/condominio`;
+    navigate(path);
+  }
   return (
     <div className="login min-w-full min-h-screen flex flex-col justify-center items-center">
       <h1>Entrar em condomínio</h1>
@@ -37,6 +45,9 @@ function LoginCondominio() {
               }
             );
             console.log({ res });
+
+            localStorage.setItem("token", res.data.accessToken.token);
+
             Redirect();
           } catch (error) {
             console.log({ error });

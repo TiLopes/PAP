@@ -118,16 +118,13 @@ module.exports = function (sequelize, DataTypes) {
   };
 
   Condominio.saveToken = async (id, token) => {
-    await Condominio.update(
-      { authToken: token },
-      { where: { idcondominio: id } }
-    );
+    await Condominio.update({ authToken: token }, { where: { id: id } });
   };
 
   Condominio.removeToken = async (condominio, token) => {
     await Condominio.update(
       { authToken: null },
-      { where: { idcondominio: condominio.idcondominio } }
+      { where: { id: condominio.id } }
     );
     console.log("Apagado com sucesso");
   };

@@ -6,6 +6,7 @@ import SignupCondominio from "./pages/SignupCondominio";
 import "./index.scss";
 import { createBrowserRouter, RouterProvider, Route } from "react-router-dom";
 import Error from "./pages/Error";
+import AdminCondominio from "./pages/AdminCondominio";
 
 const router = createBrowserRouter([
   {
@@ -21,6 +22,11 @@ const router = createBrowserRouter([
   {
     path: "signup/condominio",
     element: <SignupCondominio />,
+    errorElement: <Error />,
+  },
+  {
+    path: "administracao/condominio",
+    element: <AdminCondominio />,
     errorElement: <Error />,
   },
 ]);

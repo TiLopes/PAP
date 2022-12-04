@@ -3,6 +3,7 @@ const { sequelize } = require("../models");
 var initModels = require("../models/init-models");
 var models = initModels(sequelize);
 const Condominio = models.Condominio;
+const Condomino = models.Condomino;
 require("dotenv").config({
   path: "./config/.env",
 });
@@ -22,10 +23,23 @@ const verifyJWT = (req, res, next) => {
         console.log(err.message);
         return res.status(403).json({ error: "Token is invalid" });
       }
-      const condominio = await Condominio.findOne({
-        where: { authToken: token },
-      });
-      if (!condominio) {
+
+      const condominio =
+        (await Condominio.findOne({
+          where: { authToken: token },
+        })) || null;
+
+      if (condominio != null) {
+        console.log("a");
+        return next();
+      }
+
+      const condomino =
+        (await Condomino.findOne({
+          where: { authToken: token },
+        })) || null;
+
+      if (condomino == null) {
         return res.status(401).json({ error: "Invalid user token" });
       }
 
