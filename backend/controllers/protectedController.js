@@ -30,9 +30,12 @@ const personalInfoGET = async (req, res) => {
 
   res.status(200).json({
     user: {
-      id: condominio.id,
-      group_id: condominio.group_id,
+      nome: condominio.nome,
+      nif: condominio.nif,
+      nomeAdmin: condominio.nomeAdmin,
       email: condominio.email,
+      morada: condominio.morada,
+      codPostal: condominio.codPostal,
     },
   });
 };

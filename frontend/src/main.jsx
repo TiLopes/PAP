@@ -8,6 +8,7 @@ import { createBrowserRouter, RouterProvider, Route } from "react-router-dom";
 import Error from "./pages/Error";
 import AdminCondominio from "./pages/AdminCondominio";
 import AdminDashboard from "./pages/AdminDashboard";
+import AdminProfile from "./pages/AdminProfile";
 
 const router = createBrowserRouter([
   {
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
       {
         path: "dashboard",
         element: <AdminDashboard />,
+      },
+      {
+        path: "profile",
+        element: <AdminProfile />,
       },
     ],
   },

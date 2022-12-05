@@ -7,7 +7,7 @@ function LoginCondominio() {
   let navigate = useNavigate();
 
   function Redirect() {
-    let path = `/administracao/condominio`;
+    let path = `/administracao/condominio/dashboard`;
     navigate(path);
   }
   return (

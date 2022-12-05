@@ -18,17 +18,17 @@ function AdminNavbar() {
       </div>
       <ul className="nav-list">
         <li>
-          <a href="#">
+          <Link to={"dashboard"}>
             <i className="bx bx-grid-alt"></i>
             <span className="links_name">Dashboard</span>
-          </a>
+          </Link>
           <span className="tooltip">Dashboard</span>
         </li>
         <li>
-          <a href="#">
+          <Link to={"profile"}>
             <i className="bx bx-user"></i>
             <span className="links_name">User</span>
-          </a>
+          </Link>
           <span className="tooltip">User</span>
         </li>
         <li>
