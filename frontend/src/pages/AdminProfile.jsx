@@ -28,17 +28,41 @@ function AdminProfile() {
 
   if (permission) {
     return (
-      <>
+      <section className="profile">
         <h1>Profile</h1>
         <div className="profile-wrapper">
-          <p>{userData.nome}</p>
-          <p>{userData.nif}</p>
-          <p>{userData.nomeAdmin}</p>
-          <p>{userData.email}</p>
-          <p>{userData.morada}</p>
-          <p>{userData.codPostal}</p>
+          <div className="w-4/6 mb-4">
+            <label htmlFor="nome">Nome do condomínio</label>
+            <input type="text" name="nome" value={userData.nome} readOnly />
+          </div>
+          <div className="w-1/4 mb-4">
+            <label htmlFor="nif">NIF</label>
+            <input type="text" name="nif" value={userData.nif} readOnly />
+          </div>
+          <label htmlFor="nomeAdmin">Nome do administrador do condomínio</label>
+          <input
+            type="text"
+            name="nomeAdmin"
+            value={userData.nomeAdmin}
+            readOnly
+          />
+          <label htmlFor="email">Email</label>
+          <input type="text" name="email" value={userData.email} readOnly />
+          <div className="w-4/6 mb-4">
+            <label htmlFor="morada">Morada</label>
+            <input type="text" name="morada" value={userData.morada} readOnly />
+          </div>
+          <div className="w-1/4 mb-4">
+            <label htmlFor="codPostal">Cód. Postal</label>
+            <input
+              type="text"
+              name="codPostal"
+              value={userData.codPostal}
+              readOnly
+            />
+          </div>
         </div>
-      </>
+      </section>
     );
   }
 }

@@ -1,3 +1,32 @@
-.profile-wrapper{
-  border: 1px solid ;
+.profile {
+  h1 {
+    margin-bottom: 1rem;
+  }
+}
+
+.profile-wrapper {
+  border: 1px solid #4d4d4d;
+  border-radius: 10px;
+  height: fit-content;
+  display: flex;
+  padding: 2rem;
+  max-width: 600px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  input[type="text"] {
+    border: #bbbbbb 1px solid;
+    border-radius: 10px;
+    padding: 0.5rem;
+    width: 100%;
+    outline: none;
+    width: 100%;
+    display: block;
+    position: relative;
+    background: transparent;
+
+    &:not(:last-child) {
+      margin-bottom: 1rem;
+    }
+  }
 }

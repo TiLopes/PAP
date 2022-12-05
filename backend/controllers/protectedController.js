@@ -32,7 +32,7 @@ const personalInfoGET = async (req, res) => {
     user: {
       nome: condominio.nome,
       nif: condominio.nif,
-      nomeAdmin: condominio.nomeAdmin,
+      nomeAdmin: condominio.nomeAdministrador,
       email: condominio.email,
       morada: condominio.morada,
       codPostal: condominio.codPostal,
