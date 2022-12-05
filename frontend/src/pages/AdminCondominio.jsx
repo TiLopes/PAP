@@ -2,6 +2,10 @@ import { useState } from "react";
 import { useEffect } from "react";
 import axios from "../helper/axiosInstance";
 import { useNavigate } from "react-router-dom";
+import AdminNavbar from "../components/AdminNavbar";
+import "./AdminCondominio.scss";
+import { Helmet, HelmetProvider } from "react-helmet-async";
+import { Outlet } from "react-router-dom";
 
 function AdminCondominio() {
   const [permission, setPermission] = useState(false);
@@ -26,7 +30,21 @@ function AdminCondominio() {
   });
 
   if (permission) {
-    return <h1>aaaa</h1>;
+    return (
+      <HelmetProvider>
+        <Helmet>
+          <title>Administração condomínio</title>
+          <link
+            href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css"
+            rel="stylesheet"
+          ></link>
+        </Helmet>
+        <AdminNavbar />
+        <section className="home-section">
+          <Outlet />
+        </section>
+      </HelmetProvider>
+    );
   }
 }
 

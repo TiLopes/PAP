@@ -7,6 +7,7 @@ import "./index.scss";
 import { createBrowserRouter, RouterProvider, Route } from "react-router-dom";
 import Error from "./pages/Error";
 import AdminCondominio from "./pages/AdminCondominio";
+import AdminDashboard from "./pages/AdminDashboard";
 
 const router = createBrowserRouter([
   {
@@ -28,6 +29,12 @@ const router = createBrowserRouter([
     path: "administracao/condominio",
     element: <AdminCondominio />,
     errorElement: <Error />,
+    children: [
+      {
+        path: "dashboard",
+        element: <AdminDashboard />,
+      },
+    ],
   },
 ]);
 
