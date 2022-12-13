@@ -3,6 +3,8 @@ import ReactDOM from "react-dom/client";
 import Frontpage from "./pages/Frontpage";
 import LoginCondominio from "./pages/LoginCondominio";
 import SignupCondominio from "./pages/SignupCondominio";
+import LoginCondomino from "./pages/LoginCondomino";
+import SignupCondomino from "./pages/SignupCondomino";
 import "./index.scss";
 import { createBrowserRouter, RouterProvider, Route } from "react-router-dom";
 import Error from "./pages/Error";
@@ -17,13 +19,13 @@ const router = createBrowserRouter([
     errorElement: <Error />,
   },
   {
-    path: "login/condominio",
-    element: <LoginCondominio />,
+    path: "signup/condominio",
+    element: <SignupCondominio />,
     errorElement: <Error />,
   },
   {
-    path: "signup/condominio",
-    element: <SignupCondominio />,
+    path: "login/condominio",
+    element: <LoginCondominio />,
     errorElement: <Error />,
   },
   {
@@ -40,6 +42,11 @@ const router = createBrowserRouter([
         element: <AdminProfile />,
       },
     ],
+  },
+  {
+    path: "signup/condomino/:condominioCode",
+    element: <SignupCondomino />,
+    errorElement: <Error />,
   },
 ]);
 

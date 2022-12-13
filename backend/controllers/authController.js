@@ -63,8 +63,18 @@ const handleErrors = (err) => {
 };
 
 // SIGN UP
-module.exports.signupGET = (req, res) => {
-  res.status(200).json({ success: true });
+module.exports.signupGET = async (req, res) => {
+  const { code } = req.params;
+
+  try {
+    console.log(code);
+
+    const condominio = await Condominio.findOne({ where: { code } });
+    res.status(201).json({ id: condominio.id });
+  } catch (error) {
+    console.error(error);
+    res.status(404).json({});
+  }
 };
 
 // module.exports.signupPOST = async (req, res) => {
@@ -97,6 +107,15 @@ module.exports.signupPOST = async (req, res) => {
     userType,
   } = req.body;
 
+  const chars =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+  let code = "";
+
+  for (let i = 0; i < 10; i++) {
+    code += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+
   try {
     if (userType === "condominio") {
       const condominio = await Condominio.create({
@@ -107,8 +126,9 @@ module.exports.signupPOST = async (req, res) => {
         nif,
         morada,
         codPostal,
+        code,
       });
-      res.status(200).json({
+      return res.status(200).json({
         nome: condominio.nome,
         nomeAdministrador: condominio.nomeAdministrador,
         email: condominio.email,
@@ -116,25 +136,25 @@ module.exports.signupPOST = async (req, res) => {
         morada: condominio.morada,
         codPostal: condominio.codPostal,
       });
-    } else {
-      const condomino = await Condomino.create({
-        nome: nomeCond,
-        nomeAdministrador: nomeAdmin,
-        email,
-        password,
-        nif,
-        morada,
-        codPostal,
-      });
-      res.status(200).json({
-        nome: condomino.nome,
-        nomeAdministrador: condomino.nomeAdministrador,
-        email: condomino.email,
-        nif: condomino.nif,
-        morada: condomino.morada,
-        codPostal: condomino.codPostal,
-      });
     }
+
+    const condomino = await Condomino.create({
+      nome: nomeCond,
+      nomeAdministrador: nomeAdmin,
+      email,
+      password,
+      nif,
+      morada,
+      codPostal,
+    });
+    return res.status(200).json({
+      nome: condomino.nome,
+      nomeAdministrador: condomino.nomeAdministrador,
+      email: condomino.email,
+      nif: condomino.nif,
+      morada: condomino.morada,
+      codPostal: condomino.codPostal,
+    });
   } catch (err) {
     console.log(err);
     res.status(400).json({ err });

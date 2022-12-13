@@ -4,7 +4,7 @@ const authController = require("../controllers/authController");
 const validatePassword = require("../middleware/validatePassword");
 const validatePasswordLeak = require("../middleware/validatePasswordLeak");
 
-router.get("/api/auth/signup", authController.signupGET);
+router.get("/api/auth/signup/:code", authController.signupGET);
 router.post(
   "/api/auth/signup",
   // validatePassword,

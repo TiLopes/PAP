@@ -56,6 +56,11 @@ module.exports = function (sequelize, DataTypes) {
         type: DataTypes.STRING(255),
         allowNull: true,
       },
+      code: {
+        type: DataTypes.STRING(10),
+        allowNull: false,
+        unique: "condominio_un_code",
+      },
     },
     {
       sequelize,
@@ -79,6 +84,12 @@ module.exports = function (sequelize, DataTypes) {
           unique: true,
           using: "BTREE",
           fields: [{ name: "nif" }],
+        },
+        {
+          name: "condominio_un_code",
+          unique: true,
+          using: "BTREE",
+          fields: [{ name: "code" }],
         },
         {
           name: "condominio_FK",
