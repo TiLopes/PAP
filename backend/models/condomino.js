@@ -1,6 +1,8 @@
 const Sequelize = require("sequelize");
+const bcrypt = require("bcrypt");
+
 module.exports = function (sequelize, DataTypes) {
-  return sequelize.define(
+  const Condomino = sequelize.define(
     "Condomino",
     {
       id: {
@@ -13,6 +15,10 @@ module.exports = function (sequelize, DataTypes) {
         type: DataTypes.STRING(100),
         allowNull: false,
         unique: "condomino_un_email",
+      },
+      password: {
+        type: DataTypes.STRING(255),
+        allowNull: false,
       },
       nome: {
         type: DataTypes.STRING(45),
@@ -43,6 +49,10 @@ module.exports = function (sequelize, DataTypes) {
       idcondominio: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        references: {
+          model: "condominio",
+          key: "id",
+        },
       },
       codPostal: {
         type: DataTypes.STRING(8),
@@ -91,7 +101,19 @@ module.exports = function (sequelize, DataTypes) {
           using: "BTREE",
           fields: [{ name: "group_id" }],
         },
+        {
+          name: "condomino_ibfk_1",
+          using: "BTREE",
+          fields: [{ name: "idcondominio" }],
+        },
       ],
     }
   );
+  Condomino.beforeCreate((Condomino, options) => {
+    const salt = bcrypt.genSaltSync();
+    const hash = bcrypt.hashSync(Condomino.getDataValue("password"), salt);
+    Condomino.setDataValue("password", hash);
+  });
+
+  return Condomino;
 };

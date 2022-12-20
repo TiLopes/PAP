@@ -20,14 +20,26 @@
       width: 100%;
       display: block;
       position: relative;
+    }
 
+    .input-wrapper {
+      width: 100%;
       &:not(:last-child) {
         margin-bottom: 1rem;
+      }
+    }
+
+    .password {
+      margin-bottom: 0.5rem;
+      input {
+        margin-bottom: 0 !important;
       }
     }
   }
 
   .error-message {
     color: #db3c31;
+    font-size: 0.8rem;
+    text-align: left;
   }
 }

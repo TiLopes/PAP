@@ -70,7 +70,13 @@ module.exports.signupGET = async (req, res) => {
     console.log(code);
 
     const condominio = await Condominio.findOne({ where: { code } });
-    res.status(201).json({ id: condominio.id });
+    res
+      .status(201)
+      .json({
+        id: condominio.id,
+        morada: condominio.morada,
+        codPostal: condominio.codPostal,
+      });
   } catch (error) {
     console.error(error);
     res.status(404).json({});
@@ -96,28 +102,22 @@ module.exports.signupGET = async (req, res) => {
 // };
 
 module.exports.signupPOST = async (req, res) => {
-  const {
-    nomeCond,
-    nomeAdmin,
-    email,
-    password,
-    nif,
-    morada,
-    codPostal,
-    userType,
-  } = req.body;
+  const { userType } = req.body;
 
-  const chars =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  if (userType === "condominio") {
+    const chars =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-  let code = "";
+    let code = "";
 
-  for (let i = 0; i < 10; i++) {
-    code += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
+    for (let i = 0; i < 10; i++) {
+      code += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
 
-  try {
-    if (userType === "condominio") {
+    const { nomeCond, nomeAdmin, email, password, nif, morada, codPostal } =
+      req.body;
+
+    try {
       const condominio = await Condominio.create({
         nome: nomeCond,
         nomeAdministrador: nomeAdmin,
@@ -136,15 +136,37 @@ module.exports.signupPOST = async (req, res) => {
         morada: condominio.morada,
         codPostal: condominio.codPostal,
       });
+    } catch (err) {
+      console.log(err);
+      res.status(400).json({ err });
     }
+  }
 
+  const {
+    nomeCond,
+    email,
+    password,
+    nif,
+    telemovel,
+    fracao,
+    andar,
+    morada,
+    idCondominio,
+    codPostal,
+  } = req.body;
+
+  try {
+    console.log("idcond" + idCondominio);
     const condomino = await Condomino.create({
-      nome: nomeCond,
-      nomeAdministrador: nomeAdmin,
       email,
       password,
+      nome: nomeCond,
       nif,
+      telemovel,
+      fracao,
+      andar,
       morada,
+      idcondominio: idCondominio,
       codPostal,
     });
     return res.status(200).json({
@@ -155,9 +177,8 @@ module.exports.signupPOST = async (req, res) => {
       morada: condomino.morada,
       codPostal: condomino.codPostal,
     });
-  } catch (err) {
-    console.log(err);
-    res.status(400).json({ err });
+  } catch (error) {
+    console.log(error);
   }
 };
 
