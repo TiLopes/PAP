@@ -99,13 +99,20 @@ function AdminNavbar() {
                   </Link>
                 </li>
                 <li>
-                  <a href="#">HTML & CSS</a>
+                  <Link to={"fracoes/criar"}>Criar fração</Link>
                 </li>
+              </ul>
+            </li>
+            <li>
+              <Link to={"condomino"}>
+                <i className="bx bx-user"></i>
+                <span className="link_name">Condóminos</span>
+              </Link>
+              <ul className="sub-menu blank">
                 <li>
-                  <a href="#">JavaScript</a>
-                </li>
-                <li>
-                  <a href="#">PHP & MySQL</a>
+                  <a className="link_name" href="#">
+                    Condóminos
+                  </a>
                 </li>
               </ul>
             </li>

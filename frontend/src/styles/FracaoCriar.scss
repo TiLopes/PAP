@@ -13,6 +13,12 @@
       &:not(:last-child) {
         margin-bottom: 1rem;
       }
+      .input-wrapper {
+        margin: auto;
+        label {
+          margin-right: 10px;
+        }
+      }
     }
 
     input[type="text"],
@@ -29,6 +35,20 @@
     }
     input[type="text"]:read-only {
       background-color: #eeeeee;
+    }
+
+    input[type="button"],
+    input[type="submit"] {
+      background-color: #1d1b31;
+      padding: 0.5rem;
+      color: #fff;
+      border-radius: 7px;
+    }
+
+    .error-message {
+      color: #db3c31;
+      font-size: 0.8rem;
+      text-align: left;
     }
   }
 }

@@ -11,13 +11,19 @@ import "react-toastify/dist/ReactToastify.css";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 
-function FracaoCriar() {
+function CondominoCriar() {
   let permission = false;
   let navigate = useNavigate();
   const notifySuccess = (msg) => toast.success(msg);
+  let optionsFracao = [];
+  let fracoes = [];
 
   async function getInfo() {
-    const res = await axios.get("http://localhost:3000/api/showuser/me");
+    const res = await axios.get("http://localhost:3000/api/get/fracoeslivres");
+
+    // res.data.fracoes.forEach((fracao) => {
+    //   console.log(fracao.id);
+    // });
 
     return res.data;
   }
@@ -28,17 +34,12 @@ function FracaoCriar() {
   }
 
   const { isError, isLoading, isSuccess, data, error } = useQuery(
-    ["fracaoCriar"],
+    ["condominoCriar"],
     getInfo
   );
 
   const validationSchema = Yup.object({
-    fracao: Yup.string().required("Preencha este campo"),
-    andar: Yup.string().required("Preencha este campo"),
-    escritura: Yup.string()
-      .required("Preencha este campo")
-      .matches(/^\d*$/, "Valor inválido"),
-    tipoFracao: Yup.object().nullable().required("Preencha este campo"),
+    fracao: Yup.object().nullable().required("Preencha este campo"),
   });
 
   const {
@@ -51,18 +52,12 @@ function FracaoCriar() {
   } = useForm({
     mode: "all",
     resolver: yupResolver(validationSchema),
-    defaultValues: {
-      escritura: 0,
-    },
   });
 
   const onSubmit = async (formData) => {
     try {
       await axiosInstance.put("http://localhost:3000/api/create/fracao", {
         fracao: formData.fracao,
-        andar: formData.andar,
-        escritura: formData.escritura,
-        tipoFracao: formData.tipoFracao.value,
       });
       notifySuccess("Fração criada com sucesso!");
     } catch (err) {
@@ -84,22 +79,18 @@ function FracaoCriar() {
 
   if (isSuccess) {
     permission = true;
-  }
 
-  const optionsTipoFracao = [
-    { value: "Administração", label: "Administração" },
-    { value: "Apartamento", label: "Apartamento" },
-    { value: "Arrumos", label: "Arrumos" },
-    { value: "Atelier", label: "Atelier" },
-    { value: "Auditório", label: "Auditório" },
-    { value: "Cave", label: "Cave" },
-    { value: "Escritório", label: "Escritório" },
-    { value: "Garagem", label: "Garagem" },
-    { value: "Loja", label: "Loja" },
-    { value: "Restaurante/Cafetaria", label: "Restaurante/Cafetaria" },
-    { value: "Segurança", label: "Segurança" },
-    { value: "Sótão", label: "Sótão" },
-  ];
+    data.fracoes.forEach((fracao) => {
+      fracoes.push(fracao.id);
+    });
+
+    fracoes.forEach((fracao) => {
+      optionsFracao.push({
+        value: fracao,
+        label: fracao,
+      });
+    });
+  }
 
   if (permission) {
     return (
@@ -109,35 +100,66 @@ function FracaoCriar() {
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="input-wrapper !w-1/2">
               <label>Fração</label>
-              <input type="text" {...register("fracao")} />
+              <Controller
+                render={({ field }) => (
+                  <Select
+                    {...field}
+                    options={optionsFracao}
+                    className="w-full"
+                    isClearable="true"
+                    placeholder="Indique o tipo da fração"
+                  />
+                )}
+                name="fracao"
+                control={control}
+              />
               <div className="w-full error-message">
                 {errors.fracao?.message}
               </div>
             </div>
-            <div className="input-wrapper !w-1/2 pl-4">
-              <label>Andar</label>
-              <input type="text" {...register("andar")} />
-              <div className="w-full error-message">
-                {errors.andar?.message}
+            <div className="input-wrapper flex items-center justify-between">
+              <div className="input-wrapper flex flex-col pr-6">
+                <label>Venda</label>
+                <input
+                  type="date"
+                  {...register("venda")}
+                  className="border-black border-solid border rounded p-2"
+                />
+                {errors.venda?.message}
+              </div>
+              <div className="input-wrapper flex flex-col pl-6">
+                <label>Aquisição</label>
+                <input
+                  type="date"
+                  {...register("aquisicao")}
+                  className="border-black border-solid border rounded p-2"
+                />
+                {errors.aquisicao?.message}
               </div>
             </div>
-            <div className="input-wrapper">
-              <label>Permilagem escritura</label>
+            <div className="input-wrapper !w-4/6">
+              <label htmlFor="nome">Nome do condómino</label>
+              <input type="text" name="nome" {...register("nome")} />
+              <div className="w-full error-message">{errors.nome?.message}</div>
+            </div>
+            <div className="input-wrapper !w-1/4">
+              <label htmlFor="nif">NIF</label>
               <input
                 type="text"
-                {...register("escritura", { valueAsNumber: true })}
-                className="!w-1/3"
+                name="nif"
+                maxLength={9}
+                size={9}
+                placeholder="123456789"
+                {...register("nif")}
               />
-              <div className="w-full error-message">
-                {errors.escritura?.message}
-              </div>
+              <div className="w-full error-message">{errors.nif?.message}</div>
             </div>
             <div className="input-wrapper !w-4/6">
               <label>Morada</label>
               <input
                 type="text"
                 {...register("morada")}
-                defaultValue={data.user.morada}
+                defaultValue={data.condominio.morada}
                 readOnly
               />
             </div>
@@ -146,40 +168,35 @@ function FracaoCriar() {
               <input
                 type="text"
                 {...register("codPostal")}
-                defaultValue={data.user.codPostal}
+                defaultValue={data.condominio.cod_postal}
                 readOnly
               />
             </div>
             <div className="input-wrapper">
-              <Controller
-                render={({ field }) => (
-                  <Select
-                    {...field}
-                    options={optionsTipoFracao}
-                    className="w-full"
-                    isClearable="true"
-                    placeholder="Indique o tipo da fração"
-                  />
-                )}
-                name="tipoFracao"
-                control={control}
+              <label>Telemóvel</label>
+              <input
+                type="text"
+                name="telemovel"
+                maxLength={9}
+                {...register("telemovel")}
               />
               <div className="w-full error-message">
-                {errors.tipoFracao?.message}
+                {errors.telemovel?.message}
               </div>
             </div>
-
-            <input
-              type="submit"
-              value={"Criar"}
-              className="cursor-pointer font-bold"
-            />
-            <input
-              type={"button"}
-              onClick={() => navigate(-1)}
-              value="Cancelar"
-              className="cursor-pointer font-bold"
-            />
+            <div className="input-wrapper flex justify-between">
+              <input
+                type="submit"
+                value={"Criar"}
+                className="cursor-pointer font-bold"
+              />
+              <input
+                type={"button"}
+                onClick={() => navigate(-1)}
+                value="Cancelar"
+                className="cursor-pointer font-bold"
+              />
+            </div>
           </form>
           <ToastContainer
             position="top-right"
@@ -199,4 +216,4 @@ function FracaoCriar() {
   }
 }
 
-export default FracaoCriar;
+export default CondominoCriar;

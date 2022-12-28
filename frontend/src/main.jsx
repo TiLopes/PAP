@@ -16,7 +16,9 @@ const AdminCondominio = lazy(() => import("./pages/AdminCondominio"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const AdminProfile = lazy(() => import("./pages/AdminProfile"));
 const AdminFracoes = lazy(() => import("./pages/AdminFracoes"));
+const AdminCondomino = lazy(() => import("./pages/AdminCondomino"));
 const FracaoCriar = lazy(() => import("@components/FracaoCriar"));
+const CondominoCriar = lazy(() => import("@components/CondominoCriar"));
 
 const router = createBrowserRouter([
   {
@@ -82,7 +84,6 @@ const router = createBrowserRouter([
           </Suspense>
         ),
         errorElement: <Error />,
-
         children: [],
       },
       {
@@ -90,6 +91,24 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<LoadingSpinner />}>
             <FracaoCriar />
+          </Suspense>
+        ),
+        errorElement: <Error />,
+      },
+      {
+        path: "condomino",
+        element: (
+          <Suspense fallback={<LoadingSpinner />}>
+            <AdminCondomino />
+          </Suspense>
+        ),
+        errorElement: <Error />,
+      },
+      {
+        path: "condomino/criar",
+        element: (
+          <Suspense fallback={<LoadingSpinner />}>
+            <CondominoCriar />
           </Suspense>
         ),
         errorElement: <Error />,
