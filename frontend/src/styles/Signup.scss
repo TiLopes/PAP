@@ -1,4 +1,10 @@
 .signup {
+  h1 {
+    margin-bottom: 2rem;
+    font-weight: bold;
+    font-size: 3rem;
+  }
+
   form {
     border: #dddddd 1px solid;
     border-radius: 10px;
@@ -15,11 +21,13 @@
       border: #dddddd 1px solid;
       border-radius: 10px;
       padding: 0.5rem;
-      width: 100%;
       outline: none;
       width: 100%;
       display: block;
       position: relative;
+    }
+    input[type="text"]:read-only {
+      background-color: #eeeeee;
     }
 
     .input-wrapper {
@@ -29,11 +37,9 @@
       }
     }
 
-    .password {
-      margin-bottom: 0.5rem;
-      input {
-        margin-bottom: 0 !important;
-      }
+    input[type="submit"] {
+      margin-inline: auto;
+      font-weight: bold;
     }
   }
 

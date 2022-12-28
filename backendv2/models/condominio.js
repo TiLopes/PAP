@@ -1,49 +1,75 @@
-const Sequelize = require("sequelize");
+const { Sequelize } = require("sequelize");
 const bcrypt = require("bcrypt");
-
 module.exports = function (sequelize, DataTypes) {
   const Condominio = sequelize.define(
     "Condominio",
     {
-      idcondominio: {
-        autoIncrement: true,
+      id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         primaryKey: true,
-      },
-      nome: {
-        type: DataTypes.STRING(100),
-        allowNull: false,
-      },
-      nomeAdministrador: {
-        type: DataTypes.STRING(100),
-        allowNull: false,
-      },
-      email: {
-        type: DataTypes.STRING(100),
-        allowNull: false,
-        unique: "condominio_un_email",
-      },
-      password: {
-        type: DataTypes.STRING(255),
-        allowNull: false,
+        autoIncrement: true,
       },
       nif: {
         type: DataTypes.DECIMAL(9, 0),
         allowNull: false,
         defaultValue: 0,
-        unique: "condominio_un_nif",
+        unique: "nif_UNIQUE",
+      },
+      nome: {
+        type: DataTypes.STRING(100),
+        allowNull: true,
+      },
+      nome_admin: {
+        type: DataTypes.STRING(100),
+        allowNull: true,
+      },
+      email_admin: {
+        type: DataTypes.STRING(100),
+        allowNull: true,
+        validate: {
+          async exists() {
+            const con = await Condominio.findOne({
+              where: { email_admin: this.email_admin },
+            });
+            if (con) {
+              console.log("Email igual:" + con.email_admin);
+              throw new Error("ER_DUP_ENTRY");
+            }
+          },
+        },
+      },
+      password: {
+        type: DataTypes.STRING(255),
+        allowNull: false,
       },
       morada: {
         type: DataTypes.STRING(100),
         allowNull: false,
+        defaultValue: "",
+        unique: "morada_UNIQUE",
       },
-      codPostal: {
+      cod_postal: {
         type: DataTypes.STRING(8),
         allowNull: false,
         defaultValue: "0000-000",
+        unique: "cod_postal_UNIQUE",
       },
-      group_id: {
+      id_seguro: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        references: {
+          model: "seguro",
+          key: "id",
+        },
+        unique: "fk_seguro",
+      },
+      telemovel_admin: {
+        type: DataTypes.DECIMAL(9, 0),
+        allowNull: false,
+        defaultValue: 0,
+      },
+      id_grupo: {
         type: DataTypes.INTEGER,
         allowNull: false,
         defaultValue: 999,
@@ -52,9 +78,10 @@ module.exports = function (sequelize, DataTypes) {
           key: "id",
         },
       },
-      authToken: {
+      auth_token: {
         type: DataTypes.STRING(255),
         allowNull: true,
+        unique: "auth_token_UNIQUE",
       },
     },
     {
@@ -66,29 +93,46 @@ module.exports = function (sequelize, DataTypes) {
           name: "PRIMARY",
           unique: true,
           using: "BTREE",
-          fields: [{ name: "idcondominio" }],
+          fields: [{ name: "id" }],
         },
         {
-          name: "condominio_un_email",
-          unique: true,
-          using: "BTREE",
-          fields: [{ name: "email" }],
-        },
-        {
-          name: "condominio_un_nif",
+          name: "nif_UNIQUE",
           unique: true,
           using: "BTREE",
           fields: [{ name: "nif" }],
         },
         {
-          name: "condominio_FK",
+          name: "morada_UNIQUE",
+          unique: true,
           using: "BTREE",
-          fields: [{ name: "group_id" }],
+          fields: [{ name: "morada" }],
+        },
+        {
+          name: "cod_postal_UNIQUE",
+          unique: true,
+          using: "BTREE",
+          fields: [{ name: "cod_postal" }],
+        },
+        {
+          name: "id_seguro_UNIQUE",
+          unique: true,
+          using: "BTREE",
+          fields: [{ name: "id_seguro" }],
+        },
+        {
+          name: "fk_grupo",
+          using: "BTREE",
+          fields: [{ name: "id_grupo" }],
+        },
+        {
+          name: "auth_token_UNIQUE",
+          unique: true,
+          using: "BTREE",
+          fields: [{ name: "auth_token" }],
         },
       ],
     }
   );
-
   Condominio.beforeCreate((Condominio, options) => {
     const salt = bcrypt.genSaltSync();
     const hash = bcrypt.hashSync(Condominio.getDataValue("password"), salt);
@@ -104,7 +148,9 @@ module.exports = function (sequelize, DataTypes) {
       throw new Error("Password vazia");
     }
 
-    const condominio = await Condominio.findOne({ where: { email: email } });
+    const condominio = await Condominio.findOne({
+      where: { email_admin: email },
+    });
 
     if (!condominio) {
       throw new Error("Esse email nao esta registado");
@@ -118,16 +164,13 @@ module.exports = function (sequelize, DataTypes) {
   };
 
   Condominio.saveToken = async (id, token) => {
-    await Condominio.update(
-      { authToken: token },
-      { where: { idcondominio: id } }
-    );
+    await Condominio.update({ auth_token: token }, { where: { id: id } });
   };
 
   Condominio.removeToken = async (condominio, token) => {
     await Condominio.update(
-      { authToken: null },
-      { where: { idcondominio: condominio.idcondominio } }
+      { auth_token: null },
+      { where: { id: condominio.id } }
     );
     console.log("Apagado com sucesso");
   };

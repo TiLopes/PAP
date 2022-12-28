@@ -1,6 +1,5 @@
 const Sequelize = require("sequelize");
 const bcrypt = require("bcrypt");
-
 module.exports = function (sequelize, DataTypes) {
   const Condomino = sequelize.define(
     "Condomino",
@@ -82,7 +81,7 @@ module.exports = function (sequelize, DataTypes) {
           name: "PRIMARY",
           unique: true,
           using: "BTREE",
-          fields: [{ name: "idcondomino" }],
+          fields: [{ name: "id" }],
         },
         {
           name: "condomino_un_email",

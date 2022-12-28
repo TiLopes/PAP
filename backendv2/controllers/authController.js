@@ -1,10 +1,12 @@
-const { log } = require("console");
 const jwt = require("jsonwebtoken");
-const { sequelize } = require("../models");
 var initModels = require("../models/init-models");
+const { sequelize } = require("../models");
 var models = initModels(sequelize);
+const { randomBytes, createHash } = require("node:crypto");
+const { promisify } = require("util");
+const randomBytesAsync = promisify(require("crypto").randomBytes);
 const Condominio = models.Condominio;
-const Condomino = models.Condomino;
+// const Condomino = models.Condomino;
 require("dotenv").config({
   path: "./config/.env",
 });
@@ -124,28 +126,27 @@ module.exports.signupPOST = async (req, res) => {
   const { userType } = req.body;
 
   if (userType === "condominio") {
-    const chars =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-    let code = "";
-
-    for (let i = 0; i < 10; i++) {
-      code += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-
-    const { nomeCond, nomeAdmin, email, password, nif, morada, codPostal } =
-      req.body;
+    const {
+      nomeCond,
+      nomeAdmin,
+      telemovel,
+      email,
+      password,
+      nif,
+      morada,
+      codPostal,
+    } = req.body;
 
     try {
       const condominio = await Condominio.create({
-        nome: nomeCond,
-        nomeAdministrador: nomeAdmin,
-        email,
-        password,
         nif,
+        nome: nomeCond,
+        nome_admin: nomeAdmin,
+        email_admin: email,
+        password,
         morada,
-        codPostal,
-        code,
+        cod_postal: codPostal,
+        telemovel_admin: telemovel,
       });
       return res.status(200).json({
         nome: condominio.nome,
@@ -210,6 +211,16 @@ module.exports.loginGET = (req, res) => {
   res.status(200).json({ success: true });
 };
 
+function bufferFromBufferString(bufferStr) {
+  return Buffer.from(
+    bufferStr
+      .replace(/[<>]/g, "") // remove < > symbols from str
+      .split(" ") // create an array splitting it by space
+      .slice(1) // remove Buffer word from an array
+      .reduce((acc, val) => acc.concat(parseInt(val, 16)), []) // convert all strings of numbers to hex numbers
+  );
+}
+
 module.exports.loginPOST = async (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
@@ -219,12 +230,20 @@ module.exports.loginPOST = async (req, res) => {
     if (userType === "condominio") {
       const condominio = await Condominio.login(email, password);
 
+      const randString = (await randomBytesAsync(128)).toString("hex");
+
+      const hash = createHash("sha256");
+      const hashedRandString = hash.update(randString, "utf-8").digest("hex");
+
+      console.log(`Hashed string: ${hashedRandString}`);
+
       // tokens creation
       const accessToken = jwt.sign(
-        { id: condominio.id, group_id: condominio.group_id },
+        { id: condominio.id, group_id: condominio.group_id, hashedRandString },
         process.env.ACCESS_TOKEN_SECRET,
         { expiresIn: "1h" }
       );
+      await Condominio.saveToken(condominio.id, accessToken);
 
       var accDate = jwt.verify(
         accessToken,
@@ -234,17 +253,22 @@ module.exports.loginPOST = async (req, res) => {
         }
       );
 
-      await Condominio.saveToken(condominio.id, accessToken);
-
-      res.status(200).json({
-        id: condominio.id,
-        group_id: condominio.group_id,
-        email: condominio.email,
-        accessToken: {
-          token: accessToken,
-          expires: accDate,
-        },
-      });
+      res
+        .status(200)
+        .cookie("fp", randString, {
+          httpOnly: true,
+          withCredentials: true,
+          maxAge: 3_600_000,
+        })
+        .json({
+          id: condominio.id,
+          group_id: condominio.group_id,
+          email: condominio.email,
+          accessToken: {
+            token: accessToken,
+            expires: accDate,
+          },
+        });
     }
   } catch (err) {
     const errs = handleErrors(err);

@@ -1,27 +1,38 @@
 .login {
+  h1 {
+    margin-bottom: 2rem;
+    font-weight: bold;
+    font-size: 3rem;
+  }
+
   form {
     border: #dddddd 1px solid;
     border-radius: 10px;
     display: flex;
     padding: 2rem;
     max-width: 600px;
-    flex-wrap: wrap;
+    flex-direction: column;
     justify-content: space-between;
 
+    .input-wrapper {
+      width: 400px;
+      margin-bottom: 1rem;
+
+      .error-message {
+        color: #db3c31;
+        font-size: 0.8rem;
+        text-align: left;
+      }
+    }
     input[type="email"],
     input[type="password"] {
       border: #dddddd 1px solid;
       border-radius: 10px;
       padding: 0.5rem;
-      width: 100%;
       outline: none;
-      width: 100%;
       display: block;
       position: relative;
-
-      &:not(:last-child) {
-        margin-bottom: 1rem;
-      }
+      width: 100%;
     }
   }
 }

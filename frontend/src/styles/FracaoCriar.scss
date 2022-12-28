@@ -1,0 +1,34 @@
+.fracao-criar {
+  form {
+    border: #dddddd 1px solid;
+    border-radius: 10px;
+    display: flex;
+    padding: 2rem;
+    max-width: 600px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+    .input-wrapper {
+      width: 100%;
+      &:not(:last-child) {
+        margin-bottom: 1rem;
+      }
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="password"] {
+      border: #dddddd 1px solid;
+      border-radius: 10px;
+      padding: 0.5rem;
+      outline: none;
+      width: 100%;
+      display: block;
+      position: relative;
+    }
+    input[type="text"]:read-only {
+      background-color: #eeeeee;
+    }
+  }
+}

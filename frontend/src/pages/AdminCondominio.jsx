@@ -1,33 +1,47 @@
-import { useState } from "react";
-import { useEffect } from "react";
-import axios from "../helper/axiosInstance";
+import axios from "@helpers/axiosInstance";
 import { useNavigate } from "react-router-dom";
-import AdminNavbar from "../components/AdminNavbar";
-import "./AdminCondominio.scss";
+import AdminNavbar from "@components/AdminNavbar";
+import "@styles/AdminCondominio.scss";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import { Outlet } from "react-router-dom";
+import { useQuery } from "react-query";
 
 function AdminCondominio() {
-  const [permission, setPermission] = useState(false);
+  let permission = false;
 
   let navigate = useNavigate();
+
+  const checkPermission = async () => {
+    const res = await axios.get(`http://localhost:3000/api/condominio/info`);
+
+    return res.data;
+  };
 
   function Redirect() {
     let path = `/login/condominio`;
     navigate(path);
   }
 
-  useEffect(() => {
-    axios
-      .get("http://localhost:3000/api/showuser/me")
-      .then((res) => {
-        setPermission(true);
-        console.log(res);
-      })
-      .catch((err) => {
-        Redirect();
-      });
-  });
+  const { isError, isLoading, isSuccess, data, error } = useQuery(
+    ["condominio"],
+    () => checkPermission,
+    {
+      retry: false,
+      staleTime: Infinity,
+    }
+  );
+
+  if (isLoading) {
+    return <h1>Loading...</h1>;
+  }
+
+  if (isError) {
+    return Redirect();
+  }
+
+  if (isSuccess) {
+    permission = true;
+  }
 
   if (permission) {
     return (
@@ -41,7 +55,9 @@ function AdminCondominio() {
         </Helmet>
         <AdminNavbar />
         <section className="home-section">
-          <Outlet />
+          <div className="home-content">
+            <Outlet />
+          </div>
         </section>
       </HelmetProvider>
     );

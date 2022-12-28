@@ -1,7 +1,7 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "./Login.scss";
+import "@styles/Login.scss";
 
 function LoginCondominio() {
   let navigate = useNavigate();

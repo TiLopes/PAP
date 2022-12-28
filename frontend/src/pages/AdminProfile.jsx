@@ -1,30 +1,40 @@
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "../helper/axiosInstance";
-import "./AdminProfile.scss";
+import axios from "@helpers/axiosInstance";
+import "@styles/AdminProfile.scss";
+import { useQuery } from "react-query";
 
 function AdminProfile() {
-  const [permission, setPermission] = useState(false);
-  const [userData, setUserData] = useState(null);
+  let permission = false;
 
   let navigate = useNavigate();
+
+  async function getInfo() {
+    const res = await axios.get("http://localhost:3000/api/showuser/me");
+
+    return res.data;
+  }
 
   function Redirect() {
     let path = `/login/condominio`;
     navigate(path);
   }
-  useEffect(() => {
-    axios
-      .get("http://localhost:3000/api/showuser/me")
-      .then((res) => {
-        setPermission(true);
-        setUserData(res.data.user);
-        console.log(res);
-      })
-      .catch((err) => {
-        Redirect();
-      });
-  }, []);
+
+  const { isError, isLoading, isSuccess, data, error } = useQuery(
+    "conInfo",
+    getInfo
+  );
+
+  if (isLoading) {
+    return <h1>Loading...</h1>;
+  }
+  if (isError) {
+    console.log(error);
+    return Redirect();
+  }
+
+  if (isSuccess) {
+    permission = true;
+  }
 
   if (permission) {
     return (
@@ -33,31 +43,36 @@ function AdminProfile() {
         <div className="profile-wrapper">
           <div className="w-4/6 mb-4">
             <label htmlFor="nome">Nome do condomínio</label>
-            <input type="text" name="nome" value={userData.nome} readOnly />
+            <input type="text" name="nome" value={data.user.nome} readOnly />
           </div>
           <div className="w-1/4 mb-4">
             <label htmlFor="nif">NIF</label>
-            <input type="text" name="nif" value={userData.nif} readOnly />
+            <input type="text" name="nif" value={data.user.nif} readOnly />
           </div>
           <label htmlFor="nomeAdmin">Nome do administrador do condomínio</label>
           <input
             type="text"
             name="nomeAdmin"
-            value={userData.nomeAdmin}
+            value={data.user.nomeAdmin}
             readOnly
           />
           <label htmlFor="email">Email</label>
-          <input type="text" name="email" value={userData.email} readOnly />
+          <input type="text" name="email" value={data.user.email} readOnly />
           <div className="w-4/6 mb-4">
             <label htmlFor="morada">Morada</label>
-            <input type="text" name="morada" value={userData.morada} readOnly />
+            <input
+              type="text"
+              name="morada"
+              value={data.user.morada}
+              readOnly
+            />
           </div>
           <div className="w-1/4 mb-4">
             <label htmlFor="codPostal">Cód. Postal</label>
             <input
               type="text"
               name="codPostal"
-              value={userData.codPostal}
+              value={data.user.codPostal}
               readOnly
             />
           </div>

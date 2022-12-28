@@ -2,19 +2,25 @@ const express = require("express");
 const app = express();
 const authRoutes = require("./routes/auth"); // chamar a rota
 const protectedRoutes = require("./routes/protected");
-const db = require("./models");
 const cors = require("cors");
+const db = require("./models");
+const cookieParser = require("cookie-parser");
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.static(__dirname + "/public"));
 
 const PORT = 3000;
 
 // esperar que o servidor mysql esteja operacional
-const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+// const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 // delay(2500).then(() =>
-
 // );
 
 db.sequelize.sync().then((req) => {

@@ -1,9 +1,13 @@
-import { useEffect, useState } from "react";
+import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
-import axios from "../helper/axiosInstance";
+import axios from "@helpers/axiosInstance";
+
+const checkPermission = async () => {
+  const res = await axios.get(`http://localhost:3000/api/showuser/me`);
+};
 
 function AdminDashboard() {
-  const [permission, setPermission] = useState(false);
+  let permission = false;
 
   let navigate = useNavigate();
 
@@ -11,17 +15,36 @@ function AdminDashboard() {
     let path = `/login/condominio`;
     navigate(path);
   }
-  useEffect(() => {
-    axios
-      .get("http://localhost:3000/api/showuser/me")
-      .then((res) => {
-        setPermission(true);
-        console.log(res);
-      })
-      .catch((err) => {
-        Redirect();
-      });
-  });
+
+  const { isError, isLoading, isSuccess, data, error } = useQuery(
+    "asd",
+    () => checkPermission
+  );
+
+  if (isLoading) {
+    return <h1>Loading...</h1>;
+  }
+
+  if (isError) {
+    return Redirect();
+  }
+
+  if (isSuccess) {
+    permission = true;
+    console.log("permissão ✅");
+  }
+
+  // useEffect(() => {
+  //   axios
+  //     .get("http://localhost:3000/api/showuser/me")
+  //     .then((res) => {
+  //       setPermission(true);
+  //       console.log(res);
+  //     })
+  //     .catch((err) => {
+  //       Redirect();
+  //     });
+  // }, []);
 
   if (permission) {
     return (

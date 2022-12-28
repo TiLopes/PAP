@@ -1,10 +1,11 @@
-import "./Signup.scss";
-import { Formik, Form, Field, ErrorMessage, useFormik } from "formik";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
-import * as Yup from "yup";
-import { usePasswordValidation } from "../helper/passwordVerify";
+import { useNavigate, useParams } from "react-router-dom";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { usePasswordValidation } from "@helpers/passwordVerify";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { signupCondominioValidation } from "@helpers/signupValidation";
+import "@styles/Signup.scss";
 
 function SignupCondominio() {
   let navigate = useNavigate();
@@ -33,83 +34,92 @@ function SignupCondominio() {
     setPassword({ ...password, password: ev.target.value });
   };
 
+  const validationSchema = signupCondominioValidation;
+
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(validationSchema),
+  });
+  const onSubmit = async (data) => {
+    try {
+      const res = await axios.post("http://localhost:3000/api/auth/signup", {
+        nomeCond: data.nome,
+        nomeAdmin: data.nomeAdmin,
+        telemovel: data.telemovel,
+        email: data.email,
+        password: password.password,
+        nif: data.nif,
+        morada: data.morada,
+        codPostal: data.codPostal,
+        userType: "condominio",
+      });
+      console.log(res);
+      Redirect();
+    } catch (err) {
+      console.error(err);
+      setError("email", {
+        type: "manual",
+        message: err.response.data.errors.email,
+      });
+
+      setError("password", {
+        type: "manual",
+        message: err.response.data.errors.password,
+      });
+    }
+  };
+
   return (
     <>
       <div className="signup min-w-full min-h-screen flex flex-col justify-center items-center">
         <h1>Registro de condomínio</h1>
-
-        <Formik
-          validateOnChange={false}
-          validateOnBlur={false}
-          initialValues={{
-            nome: "",
-            nif: "",
-            nomeAdmin: "",
-            email: "",
-            password: "",
-            morada: "",
-            codPostal: "",
-          }}
-          validationSchema={Yup.object({
-            nome: Yup.string().required(
-              "Obrigatório preencher o nome do condomínio."
-            ),
-            nif: Yup.string()
-              .matches(/^\d\d\d\d\d\d\d\d\d$/, "NIF inválido!")
-              .required("Obrigatório preencher o NIF."),
-            nomeAdmin: Yup.string().required(
-              "Obrigatório preencher o nome do administrador do condomínio."
-            ),
-            email: Yup.string()
-              .email("Email inválido!")
-              .required("Obrigatório preencher o email."),
-            // password: Yup.string().min(6, "A password t").max(25).required(),
-            morada: Yup.string().required("Obrigatório preencher a morada."),
-            codPostal: Yup.string()
-              .matches(/^\d\d\d\d-\d\d\d$/, "Código postal inválido")
-              .required("Obrigatório preencher o código postal."),
-          })}
-          onSubmit={async (values) => {
-            try {
-              const res = await axios.post(
-                "http://localhost:3000/api/auth/signup",
-                {
-                  nomeCond: values.nome,
-                  nomeAdmin: values.nomeAdmin,
-                  email: values.email,
-                  password: values.password,
-                  nif: values.nif,
-                  morada: values.morada,
-                  codPostal: values.codPostal,
-                  userType: "condominio",
-                }
-              );
-              console.log({ res });
-              Redirect();
-            } catch (error) {
-              console.log({ error });
-            }
-          }}
-        >
-          <Form>
-            <div className="w-4/6 mb-4">
-              <label htmlFor="nome">Nome do condomínio</label>
-              <Field type="text" name="nome"></Field>
-            </div>
-            <div className="w-1/4">
-              <label htmlFor="nif">NIF</label>
-              <Field
-                type="text"
-                name="nif"
-                maxLength={9}
-                size={9}
-                placeholder="123456789"
-              ></Field>
-            </div>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="input-wrapper !w-4/6">
+            <label htmlFor="nome">Nome do condomínio</label>
+            <input type="text" name="nome" {...register("nome")} />
+            <div className="w-full error-message">{errors.nome?.message}</div>
+          </div>
+          <div className="input-wrapper !w-1/4">
+            <label htmlFor="nif">NIF</label>
+            <input
+              type="text"
+              name="nif"
+              maxLength={9}
+              size={9}
+              placeholder="123456789"
+              {...register("nif")}
+            />
+            <div className="w-full error-message">{errors.nif?.message}</div>
+          </div>
+          <div className="input-wrapper">
             <label htmlFor="nomeAdmin">Nome do administrador</label>
-            <Field type="text" name="nomeAdmin" />
-            <label htmlFor="email">Email</label>
-            <Field type="email" name="email" />
+            <input type="text" name="nomeAdmin" {...register("nomeAdmin")} />
+            <div className="w-full error-message">
+              {errors.nomeAdmin?.message}
+            </div>
+          </div>
+          <div className="input-wrapper">
+            <label htmlFor="telemovel">Nº telemóvel</label>
+            <input
+              type="text"
+              name="telemovel"
+              maxLength={9}
+              {...register("telemovel")}
+            />
+            <div className="w-full error-message">
+              {errors.telemovel?.message}
+            </div>
+          </div>
+          <div className="input-wrapper">
+            <label htmlFor="email">Email do administrador</label>
+            <input type="email" name="email" {...register("email")} />
+            <div className="w-full error-message">{errors.email?.message}</div>
+          </div>
+          <div className="input-wrapper">
             <label htmlFor="password">Password</label>
             <div className="relative w-full password">
               <input
@@ -151,104 +161,113 @@ function SignupCondominio() {
                 </svg>
               )}
             </div>
-            <div className="w-full mb-2">
-              <ul>
-                <li>
-                  {validLength ? (
-                    <i className="fa-solid fa-circle-check mr-3 text-green-500"></i>
-                  ) : (
-                    <i className="fa-solid fa-circle-xmark mr-3 text-red-500"></i>
-                  )}
-                  Mínimo de 8 caracteres
-                </li>
-                <li>
-                  {hasNumber ? (
-                    <i className="fa-solid fa-circle-check mr-3 text-green-500"></i>
-                  ) : (
-                    <i className="fa-solid fa-circle-xmark mr-3 text-red-500"></i>
-                  )}
-                  Tem um digito
-                </li>
-                <li>
-                  {upperCase ? (
-                    <i className="fa-solid fa-circle-check mr-3 text-green-500"></i>
-                  ) : (
-                    <i className="fa-solid fa-circle-xmark mr-3 text-red-500"></i>
-                  )}
-                  Tem uma maiúscula
-                </li>
-                <li>
-                  {lowerCase ? (
-                    <i className="fa-solid fa-circle-check mr-3 text-green-500"></i>
-                  ) : (
-                    <i className="fa-solid fa-circle-xmark mr-3 text-red-500"></i>
-                  )}
-                  Tem uma minúscula
-                </li>
-                <li>
-                  {specialChar ? (
-                    <i className="fa-solid fa-circle-check mr-3 text-green-500"></i>
-                  ) : (
-                    <i className="fa-solid fa-circle-xmark mr-3 text-red-500"></i>
-                  )}
-                  Tem 1 caractere especial
-                </li>
-              </ul>
-            </div>
-            <div className="w-4/6 mb-4">
-              <label htmlFor="morada">Morada</label>
-              <Field type="text" name="morada" placeholder="Rua da Água, 2" />
-            </div>
-            <div className="w-1/4">
-              <label htmlFor="codPostal">Cód. Postal</label>
-              <Field
-                type="text"
-                name="codPostal"
-                maxLength={8}
-                size={8}
-                placeholder="1234-123"
-              />
-            </div>
-            <ErrorMessage
-              name="nome"
-              component="div"
-              className="w-full text-center error-message"
-            />
-            <ErrorMessage
-              name="nif"
-              component="div"
-              className="w-full text-center error-message"
-            />
-            <ErrorMessage
-              name="nomeAdmin"
-              component="div"
-              className="w-full text-center error-message"
-            />
-            <ErrorMessage
-              name="email"
-              component="div"
-              className="w-full text-center error-message"
-            />
-            <ErrorMessage
-              name="password"
-              component="div"
-              className="w-full text-center error-message"
-            />
-            <ErrorMessage
+          </div>
+          <div className="w-full mb-4">
+            <ul>
+              <li>
+                {validLength ? (
+                  <i className="fa-solid fa-circle-check mr-3 text-green-500"></i>
+                ) : (
+                  <i className="fa-solid fa-circle-xmark mr-3 text-red-500"></i>
+                )}
+                Mínimo de 8 caracteres
+              </li>
+              <li>
+                {hasNumber ? (
+                  <i className="fa-solid fa-circle-check mr-3 text-green-500"></i>
+                ) : (
+                  <i className="fa-solid fa-circle-xmark mr-3 text-red-500"></i>
+                )}
+                Tem um digito
+              </li>
+              <li>
+                {upperCase ? (
+                  <i className="fa-solid fa-circle-check mr-3 text-green-500"></i>
+                ) : (
+                  <i className="fa-solid fa-circle-xmark mr-3 text-red-500"></i>
+                )}
+                Tem uma maiúscula
+              </li>
+              <li>
+                {lowerCase ? (
+                  <i className="fa-solid fa-circle-check mr-3 text-green-500"></i>
+                ) : (
+                  <i className="fa-solid fa-circle-xmark mr-3 text-red-500"></i>
+                )}
+                Tem uma minúscula
+              </li>
+              <li>
+                {specialChar ? (
+                  <i className="fa-solid fa-circle-check mr-3 text-green-500"></i>
+                ) : (
+                  <i className="fa-solid fa-circle-xmark mr-3 text-red-500"></i>
+                )}
+                Tem 1 caractere especial
+              </li>
+            </ul>
+          </div>
+          <div className="input-wrapper !w-4/6">
+            <label htmlFor="morada">Morada</label>
+            <input
+              type="text"
               name="morada"
-              component="div"
-              className="w-full text-center error-message"
+              {...register("morada")}
+              placeholder="Rua da Água, 2"
             />
-            <ErrorMessage
+            <div className="w-full error-message">{errors.morada?.message}</div>
+          </div>
+          <div className="input-wrapper !w-1/4">
+            <label htmlFor="codPostal">Cód. Postal</label>
+            <input
+              type="text"
               name="codPostal"
-              component="div"
-              className="w-full text-center error-message"
+              maxLength={8}
+              size={8}
+              placeholder="1234-123"
+              {...register("codPostal")}
             />
-            <button type="submit" className={"mx-auto font-bold"}>
-              Registrar
-            </button>
-          </Form>
-        </Formik>
+            <div className="w-full error-message">
+              {errors.codPostal?.message}
+            </div>
+          </div>
+          <input type="submit" className="cursor-pointer" value={"Registar"} />
+        </form>
+        {/* <Formik
+          validateOnChange={false}
+          validateOnBlur={false}
+          initialValues={{
+            nome: "",
+            nif: "",
+            nomeAdmin: "",
+            email: "",
+            password: "",
+            morada: "",
+            codPostal: "",
+          }}
+          onSubmit={async (values, errors) => {
+            try {
+              const res = await axios.post(
+                "http://localhost:3000/api/auth/signup",
+                {
+                  nomeCond: values.nome,
+                  nomeAdmin: values.nomeAdmin,
+                  email: values.email,
+                  password: values.password,
+                  nif: values.nif,
+                  morada: values.morada,
+                  codPostal: values.codPostal,
+                  userType: "condominio",
+                }
+              );
+              console.log(res);
+              Redirect();
+            } catch (err) {
+              console.error(err);
+              console.log(err.response.data.errors.email);
+              errors.email = err.response.data.errors.email;
+            }
+          }}
+        >*/}
       </div>
     </>
   );

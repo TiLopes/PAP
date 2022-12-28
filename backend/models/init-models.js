@@ -16,6 +16,8 @@ function initModels(sequelize) {
 
   Groups.belongsToMany(Permissions, { as: 'permission_id_permissions', through: GroupPermissions, foreignKey: "group_id", otherKey: "permission_id" });
   Permissions.belongsToMany(Groups, { as: 'group_id_groups', through: GroupPermissions, foreignKey: "permission_id", otherKey: "group_id" });
+  Condomino.belongsTo(Condominio, { as: "idcondominio_condominio", foreignKey: "idcondominio"});
+  Condominio.hasMany(Condomino, { as: "condominos", foreignKey: "idcondominio"});
   Condominio.belongsTo(Groups, { as: "group", foreignKey: "group_id"});
   Groups.hasMany(Condominio, { as: "condominios", foreignKey: "group_id"});
   Condomino.belongsTo(Groups, { as: "group", foreignKey: "group_id"});

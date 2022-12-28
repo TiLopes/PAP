@@ -9,7 +9,7 @@
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
-SET time_zone = "+00:00";
+SET time_zone = "+01:00";
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -39,7 +39,7 @@ CREATE TABLE `condominio` (
   `group_id` int(11) NOT NULL DEFAULT 999,
   `authToken` varchar(255) DEFAULT NULL,
   `code` varchar(10) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `condominio`
@@ -68,7 +68,7 @@ CREATE TABLE `condomino` (
   `codPostal` varchar(8) NOT NULL DEFAULT '0000-000',
   `group_id` int(11) NOT NULL DEFAULT 1,
   `authToken` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -79,7 +79,7 @@ CREATE TABLE `condomino` (
 CREATE TABLE `groups` (
   `id` int(11) NOT NULL,
   `name` varchar(45) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `groups`
@@ -98,7 +98,7 @@ INSERT INTO `groups` (`id`, `name`) VALUES
 CREATE TABLE `group_permissions` (
   `group_id` int(11) NOT NULL,
   `permission_id` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `group_permissions`
@@ -116,7 +116,7 @@ INSERT INTO `group_permissions` (`group_id`, `permission_id`) VALUES
 CREATE TABLE `permissions` (
   `id` varchar(50) NOT NULL,
   `description` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `permissions`
@@ -139,7 +139,7 @@ CREATE TABLE `user` (
   `authToken` varchar(255) DEFAULT NULL,
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) DEFAULT CHARSET=utf8mb4;
 
 --
 -- Indexes for dumped tables
