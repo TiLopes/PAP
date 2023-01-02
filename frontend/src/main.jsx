@@ -12,13 +12,16 @@ const Frontpage = lazy(() => import("./pages/Frontpage"));
 const LoginCondominio = lazy(() => import("./pages/LoginCondominio"));
 const SignupCondominio = lazy(() => import("./pages/SignupCondominio"));
 
-const AdminCondominio = lazy(() => import("./pages/AdminCondominio"));
+const Admin = lazy(() => import("./pages/Admin"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const AdminProfile = lazy(() => import("./pages/AdminProfile"));
 const AdminFracoes = lazy(() => import("./pages/AdminFracoes"));
 const AdminCondomino = lazy(() => import("./pages/AdminCondomino"));
 const FracaoCriar = lazy(() => import("@components/FracaoCriar"));
 const CondominoCriar = lazy(() => import("@components/CondominoCriar"));
+const LoginCondomino = lazy(() => import("./pages/LoginCondomino"));
+const AdminOcorrencias = lazy(() => import("./pages/AdminOcorrencias"));
+const OcorrenciaCriar = lazy(() => import("@components/OcorrenciaCriar"));
 
 const router = createBrowserRouter([
   {
@@ -50,10 +53,19 @@ const router = createBrowserRouter([
     errorElement: <Error />,
   },
   {
-    path: "administracao/condominio",
+    path: "login/condomino",
     element: (
       <Suspense fallback={<LoadingSpinner />}>
-        <AdminCondominio />
+        <LoginCondomino />
+      </Suspense>
+    ),
+    errorElement: <Error />,
+  },
+  {
+    path: "administracao/",
+    element: (
+      <Suspense fallback={<LoadingSpinner />}>
+        <Admin />
       </Suspense>
     ),
     errorElement: <Error />,
@@ -109,6 +121,24 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<LoadingSpinner />}>
             <CondominoCriar />
+          </Suspense>
+        ),
+        errorElement: <Error />,
+      },
+      {
+        path: "ocorrencias",
+        element: (
+          <Suspense fallback={<LoadingSpinner />}>
+            <AdminOcorrencias />
+          </Suspense>
+        ),
+        errorElement: <Error />,
+      },
+      {
+        path: "ocorrencias/criar",
+        element: (
+          <Suspense fallback={<LoadingSpinner />}>
+            <OcorrenciaCriar />
           </Suspense>
         ),
         errorElement: <Error />,

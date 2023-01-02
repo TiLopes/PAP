@@ -6,7 +6,7 @@ const { randomBytes, createHash } = require("node:crypto");
 const { promisify } = require("util");
 const randomBytesAsync = promisify(require("crypto").randomBytes);
 const Condominio = models.Condominio;
-// const Condomino = models.Condomino;
+const Condomino = models.Condomino;
 require("dotenv").config({
   path: "./config/.env",
 });
@@ -211,16 +211,6 @@ module.exports.loginGET = (req, res) => {
   res.status(200).json({ success: true });
 };
 
-function bufferFromBufferString(bufferStr) {
-  return Buffer.from(
-    bufferStr
-      .replace(/[<>]/g, "") // remove < > symbols from str
-      .split(" ") // create an array splitting it by space
-      .slice(1) // remove Buffer word from an array
-      .reduce((acc, val) => acc.concat(parseInt(val, 16)), []) // convert all strings of numbers to hex numbers
-  );
-}
-
 module.exports.loginPOST = async (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
@@ -235,15 +225,15 @@ module.exports.loginPOST = async (req, res) => {
       const hash = createHash("sha256");
       const hashedRandString = hash.update(randString, "utf-8").digest("hex");
 
-      console.log(`Hashed string: ${hashedRandString}`);
-
       // tokens creation
       const accessToken = jwt.sign(
-        { id: condominio.id, group_id: condominio.group_id, hashedRandString },
+        { id: condominio.id, id_grupo: condominio.id_grupo, hashedRandString },
         process.env.ACCESS_TOKEN_SECRET,
         { expiresIn: "1h" }
       );
       await Condominio.saveToken(condominio.id, accessToken);
+
+      console.log(accessToken);
 
       var accDate = jwt.verify(
         accessToken,
@@ -253,7 +243,7 @@ module.exports.loginPOST = async (req, res) => {
         }
       );
 
-      res
+      return res
         .status(200)
         .cookie("fp", randString, {
           httpOnly: true,
@@ -262,8 +252,50 @@ module.exports.loginPOST = async (req, res) => {
         })
         .json({
           id: condominio.id,
-          group_id: condominio.group_id,
-          email: condominio.email,
+          id_grupo: condominio.id_grupo,
+          email: condominio.email_ocupante,
+          accessToken: {
+            token: accessToken,
+            expires: accDate,
+          },
+        });
+    } else {
+      const condomino = await Condomino.login(email, password);
+
+      const randString = (await randomBytesAsync(128)).toString("hex");
+
+      const hash = createHash("sha256");
+      const hashedRandString = hash.update(randString, "utf-8").digest("hex");
+
+      console.log(`Hashed string: ${hashedRandString}`);
+
+      // tokens creation
+      const accessToken = jwt.sign(
+        { id: condomino.id, id_grupo: condomino.id_grupo, hashedRandString },
+        process.env.ACCESS_TOKEN_SECRET,
+        { expiresIn: "1h" }
+      );
+      await Condomino.saveToken(condomino.id, accessToken);
+
+      var accDate = jwt.verify(
+        accessToken,
+        process.env.ACCESS_TOKEN_SECRET,
+        (err, decodedToken) => {
+          return decodedToken.exp;
+        }
+      );
+
+      return res
+        .status(200)
+        .cookie("fp", randString, {
+          httpOnly: true,
+          withCredentials: true,
+          maxAge: 3_600_000,
+        })
+        .json({
+          id: condomino.id,
+          id_grupo: condomino.id_grupo,
+          email: condomino.email,
           accessToken: {
             token: accessToken,
             expires: accDate,

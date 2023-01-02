@@ -1,4 +1,4 @@
-import axios from "@helpers/axiosInstance";
+import axiosInstance from "@helpers/axiosInstance";
 import { useNavigate } from "react-router-dom";
 import AdminNavbar from "@components/AdminNavbar";
 import "@styles/AdminCondominio.scss";
@@ -6,13 +6,13 @@ import { Helmet, HelmetProvider } from "react-helmet-async";
 import { Outlet } from "react-router-dom";
 import { useQuery } from "react-query";
 
-function AdminCondominio() {
+function Admin() {
   let permission = false;
 
   let navigate = useNavigate();
 
   const checkPermission = async () => {
-    const res = await axios.get(`http://localhost:3000/api/condominio/info`);
+    const res = await axiosInstance.get(`/api/condominio/info`);
 
     return res.data;
   };
@@ -64,4 +64,4 @@ function AdminCondominio() {
   }
 }
 
-export default AdminCondominio;
+export default Admin;

@@ -2,32 +2,31 @@ const { sequelize } = require("../models");
 var initModels = require("../models/init-models");
 var models = initModels(sequelize);
 const Condominio = models.Condominio;
-// const Condomino = models.Condomino;
+const Condomino = models.Condomino;
 const groupPerm = models.GroupPermissions;
 
 const verifyPermission = async (req, res, next) => {
   const token = req.header("auth-token");
+  let groupID;
 
   if (!token) {
     return res.status(403).json({ error: "Invalid token" });
   }
 
-  // const userType = (await Condominio.findOne({ where: { authToken: token } }))
-  //   ? "condominio"
-  //   : "condomino";
-
   const condominio = await Condominio.findOne({
     where: { auth_token: token },
   });
 
-  // const condomino =
-  //   (await Condomino.findOne({ where: { auth_token: token } })) || null;
-
-  if (condominio) {
-    var groupID = condominio.id_grupo;
+  if (condominio != null) {
+    console.log("condominio");
+    groupID = condominio.id_grupo;
   } else {
-    // var groupID = condomino.id:_grupo;
+    console.log("condomino");
+    const condomino = await Condomino.findOne({ where: { auth_token: token } });
+    groupID = condomino.id_grupo;
   }
+
+  console.log(groupID);
 
   const acl = await groupPerm
     .findAll(

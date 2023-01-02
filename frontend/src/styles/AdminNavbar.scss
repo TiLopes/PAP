@@ -202,28 +202,53 @@
   font-size: 12px;
 }
 
-@media screen and (max-width: 400px) {
+@media (max-width: 400px) {
+  .sidebar.close .nav-links li .sub-menu {
+    display: none;
+  }
   .sidebar {
-    width: 240px;
+    width: 78px;
   }
   .sidebar.close {
-    width: 78px;
-  }
-  .sidebar .profile-details {
-    width: 240px;
-  }
-  .sidebar.close .profile-details {
-    background: none;
-  }
-  .sidebar.close .profile-details {
-    width: 78px;
+    width: 0;
+
+    i {
+      display: none;
+    }
   }
   .home-section {
-    left: 240px;
-    width: calc(100% - 240px);
-  }
-  .sidebar.close ~ .home-section {
     left: 78px;
     width: calc(100% - 78px);
+    z-index: 100;
+  }
+  .sidebar.close ~ .home-section {
+    width: 100%;
+    left: 0;
   }
 }
+
+// @media screen and (max-width: 400px) {
+//   .sidebar {
+//     width: 240px;
+//   }
+//   .sidebar.close {
+//     width: 78px;
+//   }
+//   .sidebar .profile-details {
+//     width: 240px;
+//   }
+//   .sidebar.close .profile-details {
+//     background: none;
+//   }
+//   .sidebar.close .profile-details {
+//     width: 78px;
+//   }
+//   .home-section {
+//     left: 240px;
+//     width: calc(100% - 240px);
+//   }
+//   .sidebar.close ~ .home-section {
+//     left: 78px;
+//     width: calc(100% - 78px);
+//   }
+// }

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useQuery } from "react-query";
-import axios from "@helpers/axiosInstance";
+import axiosInstance from "@helpers/axiosInstance";
 import "@styles/AdminNavbar.scss";
 
 function AdminNavbar() {
@@ -25,8 +25,8 @@ function AdminNavbar() {
   };
 
   useEffect(() => {
-    axios
-      .get("http://localhost:3000/api/showuser/me")
+    axiosInstance
+      .get("/api/showuser/me")
       .then((res) => {
         setCondominio(res.data.user);
         setPermission(true);
@@ -104,15 +104,44 @@ function AdminNavbar() {
               </ul>
             </li>
             <li>
-              <Link to={"condomino"}>
-                <i className="bx bx-user"></i>
-                <span className="link_name">Condóminos</span>
-              </Link>
-              <ul className="sub-menu blank">
+              <div className="iocn-link">
+                <Link to={"condomino"} className="link_name">
+                  <i className="bx bx-chat"></i>
+                  <span className="link_name">Condóminos</span>
+                </Link>
+                <i
+                  className="bx bxs-chevron-down arrow"
+                  onClick={toggleArrow}
+                ></i>
+              </div>
+              <ul className="sub-menu">
                 <li>
-                  <a className="link_name" href="#">
+                  <Link to={"condomino"} className="link_name">
                     Condóminos
-                  </a>
+                  </Link>
+                </li>
+                <li>
+                  <Link to={"condomino/criar"}>Criar condómino</Link>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <div className="iocn-link">
+                <a className="link_name">
+                  <i className="bx bx-chat"></i>
+                  <span className="link_name">Manutenção</span>
+                </a>
+                <i
+                  className="bx bxs-chevron-down arrow"
+                  onClick={toggleArrow}
+                ></i>
+              </div>
+              <ul className="sub-menu">
+                <li>
+                  <a className="link_name">Manutenção</a>
+                </li>
+                <li>
+                  <Link to={"ocorrencias"}>Ocorrências</Link>
                 </li>
               </ul>
             </li>

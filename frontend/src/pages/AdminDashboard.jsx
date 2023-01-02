@@ -1,9 +1,9 @@
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
-import axios from "@helpers/axiosInstance";
+import axiosInstance from "@helpers/axiosInstance";
 
 const checkPermission = async () => {
-  const res = await axios.get(`http://localhost:3000/api/showuser/me`);
+  const res = await axiosInstance.get(`/api/condominio/info`);
 };
 
 function AdminDashboard() {

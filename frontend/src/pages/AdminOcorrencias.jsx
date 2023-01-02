@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import axiosInstance from "@helpers/axiosInstance";
 import { Outlet } from "react-router-dom";
 
-function AdminFracoes() {
+export default function AdminOcorrencias() {
   let permission = false;
   const navigate = useNavigate();
 
@@ -18,7 +18,7 @@ function AdminFracoes() {
   };
 
   const { isError, isLoading, isSuccess, data, error } = useQuery(
-    "condominio",
+    "ocorrencias",
     () => checkPermission
   );
 
@@ -36,14 +36,10 @@ function AdminFracoes() {
 
   if (permission) {
     return (
-      <>
-        <section className="fracoes">
-          <Link to={"criar"}>Criar fração</Link>
-          <Outlet />
-        </section>
-      </>
+      <section className="ocorrencias">
+        <h1>Ocorrências</h1>
+        <Link to={"criar"}>Criar ocorrência</Link>
+      </section>
     );
   }
 }
-
-export default AdminFracoes;

@@ -32,4 +32,18 @@ router.put(
   protectedController.createFracao
 );
 
+router.get(
+  "/api/get/fracoeslivres",
+  verifyJWT,
+  verifyPermission,
+  protectedController.getFracoesLivres
+);
+
+router.put(
+  "/api/create/condomino",
+  verifyJWT,
+  verifyPermission,
+  protectedController.createCondomino
+);
+
 module.exports = router;

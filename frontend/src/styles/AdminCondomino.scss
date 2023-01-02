@@ -1,4 +1,4 @@
-.fracao-criar {
+.condomino-criar {
   form {
     border: #dddddd 1px solid;
     border-radius: 10px;
@@ -15,10 +15,14 @@
       }
       .input-wrapper {
         margin: auto;
-        label {
-          margin-right: 10px;
-        }
       }
+    }
+
+    input[type="date"] {
+      border: #000 solid 1px;
+      border-radius: 4px;
+      padding: 0.5rem;
+      text-align: center;
     }
 
     input[type="text"],

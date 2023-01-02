@@ -1,4 +1,4 @@
-import axios from "axios";
+import axiosInstance from "@helpers/axiosInstance";
 import { useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -46,7 +46,7 @@ function SignupCondominio() {
   });
   const onSubmit = async (data) => {
     try {
-      const res = await axios.post("http://localhost:3000/api/auth/signup", {
+      const res = await axiosInstance.post("/api/auth/signup", {
         nomeCond: data.nome,
         nomeAdmin: data.nomeAdmin,
         telemovel: data.telemovel,

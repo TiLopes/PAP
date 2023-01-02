@@ -1,9 +1,12 @@
 const { decode } = require("jsonwebtoken");
+const { newCondomino } = require("../helper/sendEmail");
 const { sequelize } = require("../models");
 var initModels = require("../models/init-models");
 var models = initModels(sequelize);
 const Condominio = models.Condominio;
 const Fracao = models.Fracoes;
+const Condomino = models.Condomino;
+const fracoesErrors = require("../helper/errorHandlingFracoes").fracoesErrors;
 
 const userInfoGET = async (req, res) => {
   const user = await User.findByPk(req.params.userId, {
@@ -47,6 +50,7 @@ const personalInfoGET = async (req, res) => {
 };
 
 const adminInfoGET = (req, res) => {
+  console.log("admin info");
   res.sendStatus(200);
 };
 
@@ -63,9 +67,73 @@ const createFracao = async (req, res) => {
     });
   } catch (err) {
     console.error(err);
+
+    return res.status(400).json({ errors: fracoesErrors(err) });
   }
 
   res.sendStatus(200);
 };
 
-module.exports = { userInfoGET, personalInfoGET, adminInfoGET, createFracao };
+const getFracoesLivres = async (req, res) => {
+  let fracoes;
+  let condominio;
+  try {
+    fracoes = await Fracao.findAll({
+      where: { id_condominio: req.condominioID, estado: "Livre" },
+      attributes: ["id"],
+    });
+    condominio = await Condominio.findByPk(req.condominioID, {
+      attributes: ["morada", "cod_postal"],
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(400).json({ errors: err });
+  }
+
+  res.status(200).json({ fracoes, condominio });
+};
+
+const createCondomino = async (req, res) => {
+  const { fracao, aquisicao, venda, nome, nif, telemovel, email, password } =
+    req.body;
+
+  try {
+    await Condomino.create({
+      nome_ocupante: nome,
+      nif_ocupante: nif,
+      telemovel_ocupante: telemovel,
+      data_aquisicao: aquisicao,
+      data_venda: venda,
+      email_ocupante: email,
+      password,
+      id_condominio: req.condominioID,
+      fracao,
+    });
+
+    await Fracao.update(
+      {
+        estado: "Ocupado",
+      },
+      {
+        where: { id: fracao, id_condominio: req.condominioID },
+      }
+    );
+
+    newCondomino(email, password);
+  } catch (err) {
+    console.error(err);
+
+    return res.status(400).json({ errors: err });
+  }
+
+  res.sendStatus(200);
+};
+
+module.exports = {
+  userInfoGET,
+  personalInfoGET,
+  adminInfoGET,
+  createFracao,
+  getFracoesLivres,
+  createCondomino,
+};

@@ -1,5 +1,5 @@
 import { Controller, useForm } from "react-hook-form";
-import "@styles/FracaoCriar.scss";
+import "@styles/AdminFracoes.scss";
 import { useQuery } from "react-query";
 import axios from "@helpers/axiosInstance";
 import { useNavigate } from "react-router-dom";
@@ -17,7 +17,7 @@ function FracaoCriar() {
   const notifySuccess = (msg) => toast.success(msg);
 
   async function getInfo() {
-    const res = await axios.get("http://localhost:3000/api/showuser/me");
+    const res = await axios.get("/api/showuser/me");
 
     return res.data;
   }
@@ -58,7 +58,7 @@ function FracaoCriar() {
 
   const onSubmit = async (formData) => {
     try {
-      await axiosInstance.put("http://localhost:3000/api/create/fracao", {
+      await axiosInstance.put("/api/create/fracao", {
         fracao: formData.fracao,
         andar: formData.andar,
         escritura: formData.escritura,

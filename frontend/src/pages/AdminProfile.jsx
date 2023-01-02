@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import axios from "@helpers/axiosInstance";
+import axiosInstance from "@helpers/axiosInstance";
 import "@styles/AdminProfile.scss";
 import { useQuery } from "react-query";
 
@@ -9,7 +9,7 @@ function AdminProfile() {
   let navigate = useNavigate();
 
   async function getInfo() {
-    const res = await axios.get("http://localhost:3000/api/showuser/me");
+    const res = await axiosInstance.get("/api/showuser/me");
 
     return res.data;
   }

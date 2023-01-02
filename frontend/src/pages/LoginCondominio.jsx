@@ -1,7 +1,7 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from "@helpers/axiosInstance";
 import "@styles/Login.scss";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { loginCondominioValidation } from "@helpers/signupValidation";
@@ -21,17 +21,11 @@ function LoginCondominio() {
 
   const onSubmit = async (data) => {
     try {
-      const res = await axios.post(
-        "http://localhost:3000/api/auth/login",
-        {
-          email: data.email,
-          password: data.password,
-          userType: "condominio",
-        },
-        {
-          withCredentials: true,
-        }
-      );
+      const res = await axiosInstance.post("/api/auth/login", {
+        email: data.email,
+        password: data.password,
+        userType: "condominio",
+      });
       console.log(res);
 
       sessionStorage.setItem("token", res.data.accessToken.token);
@@ -43,7 +37,7 @@ function LoginCondominio() {
   };
 
   function Redirect() {
-    let path = `/administracao/condominio/`;
+    let path = `/administracao`;
     navigate(path);
   }
 
