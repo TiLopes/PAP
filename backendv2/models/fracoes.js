@@ -22,8 +22,8 @@ module.exports = function (sequelize, DataTypes) {
       },
       estado: {
         type: DataTypes.STRING(50),
-        defaultValue: "Livre",
         allowNull: false,
+        defaultValue: "Livre",
       },
       id_condominio: {
         type: DataTypes.INTEGER,
@@ -31,6 +31,14 @@ module.exports = function (sequelize, DataTypes) {
         primaryKey: true,
         references: {
           model: "condominio",
+          key: "id",
+        },
+      },
+      id_condomino: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        references: {
+          model: "condomino",
           key: "id",
         },
       },
@@ -50,6 +58,11 @@ module.exports = function (sequelize, DataTypes) {
           name: "fracoes_FK",
           using: "BTREE",
           fields: [{ name: "id_condominio" }],
+        },
+        {
+          name: "fracoes_FK_1",
+          using: "BTREE",
+          fields: [{ name: "id_condomino" }],
         },
       ],
     }

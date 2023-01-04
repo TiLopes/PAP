@@ -39,15 +39,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'fracoes',
-        key: 'id_condominio'
-      }
-    },
-    fracao: {
-      type: DataTypes.STRING(5),
-      allowNull: false,
-      references: {
-        model: 'fracoes',
+        model: 'condominio',
         key: 'id'
       }
     },
@@ -59,6 +51,10 @@ module.exports = function(sequelize, DataTypes) {
         model: 'groups',
         key: 'id'
       }
+    },
+    auth_token: {
+      type: DataTypes.STRING(500),
+      allowNull: true
     }
   }, {
     sequelize,
@@ -74,27 +70,17 @@ module.exports = function(sequelize, DataTypes) {
         ]
       },
       {
-        name: "condomino_un",
-        unique: true,
+        name: "condomino_FK",
         using: "BTREE",
         fields: [
-          { name: "id_condominio" },
-          { name: "fracao" },
+          { name: "id_grupo" },
         ]
       },
       {
         name: "condomino_FK_1",
         using: "BTREE",
         fields: [
-          { name: "fracao" },
           { name: "id_condominio" },
-        ]
-      },
-      {
-        name: "condomino_FK",
-        using: "BTREE",
-        fields: [
-          { name: "id_grupo" },
         ]
       },
     ]

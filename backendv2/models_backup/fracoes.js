@@ -31,6 +31,14 @@ module.exports = function(sequelize, DataTypes) {
         model: 'condominio',
         key: 'id'
       }
+    },
+    id_condomino: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'condomino',
+        key: 'id'
+      }
     }
   }, {
     sequelize,
@@ -51,6 +59,13 @@ module.exports = function(sequelize, DataTypes) {
         using: "BTREE",
         fields: [
           { name: "id_condominio" },
+        ]
+      },
+      {
+        name: "fracoes_FK_1",
+        using: "BTREE",
+        fields: [
+          { name: "id_condomino" },
         ]
       },
     ]

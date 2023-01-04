@@ -98,28 +98,28 @@ const createCondomino = async (req, res) => {
     req.body;
 
   try {
-    await Condomino.create({
+    const condomino = await Condomino.create({
       nome_ocupante: nome,
       nif_ocupante: nif,
       telemovel_ocupante: telemovel,
       data_aquisicao: aquisicao,
       data_venda: venda,
       email_ocupante: email,
-      password,
+      password: password,
       id_condominio: req.condominioID,
-      fracao,
     });
 
     await Fracao.update(
       {
         estado: "Ocupado",
+        id_condomino: condomino.id,
       },
       {
         where: { id: fracao, id_condominio: req.condominioID },
       }
     );
 
-    newCondomino(email, password);
+    // newCondomino(email, password);
   } catch (err) {
     console.error(err);
 

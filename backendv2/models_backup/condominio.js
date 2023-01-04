@@ -65,7 +65,7 @@ module.exports = function(sequelize, DataTypes) {
       }
     },
     auth_token: {
-      type: DataTypes.STRING(255),
+      type: DataTypes.STRING(500),
       allowNull: true,
       unique: "auth_token_UNIQUE"
     }

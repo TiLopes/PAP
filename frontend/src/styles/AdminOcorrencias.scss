@@ -18,10 +18,18 @@
       }
     }
 
+    input[type="date"] {
+      border: #000 solid 1px;
+      border-radius: 4px;
+      padding: 0.5rem;
+      text-align: center;
+    }
+
     input[type="text"],
     input[type="email"],
     input[type="tel"],
-    input[type="password"] {
+    input[type="password"],
+    textarea {
       border: #dddddd 1px solid;
       border-radius: 10px;
       padding: 0.5rem;

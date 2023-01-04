@@ -10,6 +10,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
+import { render } from "react-dom";
 
 export default function OcorrenciaCriar() {
   let permission = false;
@@ -33,12 +34,23 @@ export default function OcorrenciaCriar() {
   }
 
   const validationSchema = Yup.object({
-    fracao: Yup.string().required("Preencha este campo"),
-    andar: Yup.string().required("Preencha este campo"),
-    escritura: Yup.string()
-      .required("Preencha este campo")
-      .matches(/^\d*$/, "Valor inválido"),
-    tipoFracao: Yup.object().nullable().required("Preencha este campo"),
+    dataOcorrencia: Yup.date("Data inválida")
+      .typeError("Data inválida")
+      .max(new Date(), "Escolha uma data até o presente")
+      .required("Preencha este campo"),
+    origem: Yup.string().required("Preencha este campo"),
+    titulo: Yup.string().required("Preencha este campo"),
+    descricao: Yup.string().required("Preencha este campo"),
+    dataLimite: Yup.date("Data inválida")
+      .typeError("Data inválida")
+      .max(new Date(), "Escolha uma data até o presente")
+      .test("", "Data antes da ocorrência", function (value) {
+        if (value.getTime() < this.parent["dataOcorrencia"].getTime()) {
+          return false;
+        }
+        return true;
+      })
+      .required("Preencha este campo"),
   });
 
   const {
@@ -51,26 +63,25 @@ export default function OcorrenciaCriar() {
   } = useForm({
     mode: "all",
     resolver: yupResolver(validationSchema),
-    defaultValues: {
-      escritura: 0,
-    },
   });
 
-  const onSubmit = async (formData) => {
+  const onSubmit = (formData) => {
+    console.log(formData);
     try {
-      await axiosInstance.put("/api/create/fracao", {
-        fracao: formData.fracao,
-        andar: formData.andar,
-        escritura: formData.escritura,
-        tipoFracao: formData.tipoFracao.value,
-      });
-      notifySuccess("Fração criada com sucesso!");
+      toast.promise(
+        async () => {
+          await axiosInstance.get("/api/user/me");
+        },
+        {
+          error: "Erro ao criar ocorrência",
+        }
+      );
     } catch (err) {
       console.error(err);
-      setError("fracao", {
-        type: "manual",
-        message: err.response.data.errors.fracao,
-      });
+      // setError("fracao", {
+      //   type: "manual",
+      //   message: err.response.data.errors.fracao,
+      // });
     }
   };
 
@@ -93,23 +104,53 @@ export default function OcorrenciaCriar() {
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="input-wrapper">
             <label>Registo por</label>
-            <input type="text" readOnly />
+            <input
+              type="text"
+              readOnly
+              defaultValue={data.user.nome}
+              {...register("criador")}
+            />
           </div>
           <div className="input-wrapper">
             <label>Data da ocorrência</label>
-            <input type="date" />
+            <input
+              type="date"
+              className="block"
+              {...register("dataOcorrencia")}
+            />
+            <div className="error-message">
+              {errors.dataOcorrencia?.message}
+            </div>
           </div>
           <div className="input-wrapper">
-            <label>Registo por</label>
-            <input type="text" />
+            <label>Origem de</label>
+            <input type="text" {...register("origem")} />
+            <div className="error-message">{errors.origem?.message}</div>
           </div>
           <div className="input-wrapper">
-            <label>Registo por</label>
-            <input type="text" />
+            <label>Título</label>
+            <input type="text" {...register("titulo")} />
+            <div className="error-message">{errors.titulo?.message}</div>
           </div>
           <div className="input-wrapper">
-            <label>Registo por</label>
-            <input type="text" />
+            <label>Descrição</label>
+            <textarea
+              className="resize-none h-[10em]"
+              {...register("descricao")}
+            />
+            <div className="error-message">{errors.descricao?.message}</div>
+          </div>
+          <div className="input-wrapper">
+            <label>Informação adicional</label>
+            <textarea
+              className="resize-none h-[6em]"
+              {...register("infoAdicional")}
+            />
+          </div>
+          <div className="input-wrapper">
+            <label>Data limite de resolução</label>
+            <input type="date" className="block" {...register("dataLimite")} />
+            <div className="error-message">{errors.dataLimite?.message}</div>
           </div>
           <input
             type="submit"
@@ -123,6 +164,18 @@ export default function OcorrenciaCriar() {
             className="cursor-pointer font-bold"
           />
         </form>
+        <ToastContainer
+          position="top-right"
+          autoClose={2500}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss={false}
+          draggable={false}
+          pauseOnHover
+          theme="colored"
+        />
       </section>
     );
   }

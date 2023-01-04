@@ -37,7 +37,7 @@ function LoginCondomino() {
 
       sessionStorage.setItem("token", res.data.accessToken.token);
 
-      // Redirect();
+      Redirect();
     } catch (error) {
       console.log(error);
     }

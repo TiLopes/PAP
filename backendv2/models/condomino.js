@@ -42,15 +42,7 @@ module.exports = function (sequelize, DataTypes) {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: "fracoes",
-          key: "id_condominio",
-        },
-      },
-      fracao: {
-        type: DataTypes.STRING(5),
-        allowNull: false,
-        references: {
-          model: "fracoes",
+          model: "condominio",
           key: "id",
         },
       },
@@ -80,20 +72,14 @@ module.exports = function (sequelize, DataTypes) {
           fields: [{ name: "id" }],
         },
         {
-          name: "condomino_FK_1",
-          using: "BTREE",
-          fields: [{ name: "fracao" }, { name: "id_condominio" }],
-        },
-        {
-          name: "condomino_un",
-          unique: true,
-          using: "BTREE",
-          fields: [{ name: "id_condominio" }, { name: "fracao" }],
-        },
-        {
           name: "condomino_FK",
           using: "BTREE",
           fields: [{ name: "id_grupo" }],
+        },
+        {
+          name: "condomino_FK_1",
+          using: "BTREE",
+          fields: [{ name: "id_condominio" }],
         },
       ],
     }
@@ -106,7 +92,7 @@ module.exports = function (sequelize, DataTypes) {
     const c = await Condomino.findOne({
       where: {
         id_condominio: condomino.id_condominio,
-        fracao: condomino.fracao,
+        email_ocupante: condomino.email_ocupante,
       },
     });
 

@@ -1,20 +1,20 @@
 var DataTypes = require("sequelize").DataTypes;
-var _Fracoes = require("./fracoes");
 var _Condominio = require("./condominio");
+var _Condomino = require("./condomino");
+var _Fracoes = require("./fracoes");
 var _GroupPermissions = require("./group_permissions");
 var _Groups = require("./groups");
 var _Permissions = require("./permissions");
 var _Seguro = require("./seguro");
-var _Condomino = require("./condomino");
 
 function initModels(sequelize) {
-  var Fracoes = _Fracoes(sequelize, DataTypes);
   var Condominio = _Condominio(sequelize, DataTypes);
+  var Condomino = _Condomino(sequelize, DataTypes);
+  var Fracoes = _Fracoes(sequelize, DataTypes);
   var GroupPermissions = _GroupPermissions(sequelize, DataTypes);
   var Groups = _Groups(sequelize, DataTypes);
   var Permissions = _Permissions(sequelize, DataTypes);
   var Seguro = _Seguro(sequelize, DataTypes);
-  var Condomino = _Condomino(sequelize, DataTypes);
 
   Groups.belongsToMany(Permissions, {
     as: "permission_id_permissions",
@@ -28,18 +28,24 @@ function initModels(sequelize) {
     foreignKey: "permission_id",
     otherKey: "group_id",
   });
+  Condomino.belongsTo(Condominio, {
+    as: "id_condominio_condominio",
+    foreignKey: "id_condominio",
+  });
+  Condominio.hasMany(Condomino, {
+    as: "condominos",
+    foreignKey: "id_condominio",
+  });
   Fracoes.belongsTo(Condominio, {
     as: "id_condominio_condominio",
     foreignKey: "id_condominio",
   });
-  Condominio.hasMany(Fracoes, { as: "fracoes", foreignKey: "id_condominio" });
-  Condomino.belongsTo(Fracoes, {
-    as: "id_condominio_fraco",
-    foreignKey: "id_condominio",
+  Condominio.hasMany(Fracoes, { as: "fracos", foreignKey: "id_condominio" });
+  Fracoes.belongsTo(Condomino, {
+    as: "id_condomino_condomino",
+    foreignKey: "id_condomino",
   });
-  Fracoes.hasMany(Condomino, { as: "condominos", foreignKey: "id_condominio" });
-  Condomino.belongsTo(Fracoes, { as: "fracao_fraco", foreignKey: "fracao" });
-  Fracoes.hasMany(Condomino, { as: "fracao_condominos", foreignKey: "fracao" });
+  Condomino.hasMany(Fracoes, { as: "fracos", foreignKey: "id_condomino" });
   Condominio.belongsTo(Groups, {
     as: "id_grupo_group",
     foreignKey: "id_grupo",
@@ -67,13 +73,13 @@ function initModels(sequelize) {
   Seguro.hasOne(Condominio, { as: "condominio", foreignKey: "id_seguro" });
 
   return {
-    Fracoes,
     Condominio,
+    Condomino,
+    Fracoes,
     GroupPermissions,
     Groups,
     Permissions,
     Seguro,
-    Condomino,
   };
 }
 module.exports = initModels;
