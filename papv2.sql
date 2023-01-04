@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 02, 2023 at 11:16 PM
--- Server version: 10.4.27-MariaDB
--- PHP Version: 8.1.12
+-- Generation Time: Jan 04, 2023 at 05:07 PM
+-- Server version: 10.4.25-MariaDB
+-- PHP Version: 8.1.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -40,14 +40,14 @@ CREATE TABLE `condominio` (
   `password` varchar(255) NOT NULL,
   `id_grupo` int(11) NOT NULL DEFAULT 999,
   `auth_token` varchar(500) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `condominio`
 --
 
 INSERT INTO `condominio` (`id`, `nif`, `nome`, `nome_admin`, `email_admin`, `telemovel_admin`, `morada`, `cod_postal`, `id_seguro`, `password`, `id_grupo`, `auth_token`) VALUES
-(1, '213421122', 'asd', 'asd', 'asd@asd.com', '121312312', 'aaa, 1', '1213-111', NULL, '$2b$10$XBcuoGea3.zWCCxECigZFOucgTlue0/wEMKj7Jk96z5baDLg.t4GW', 999, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWRfZ3J1cG8iOjk5OSwiaGFzaGVkUmFuZFN0cmluZyI6IjJkMTZhOTBjMmEwMjRmM2VmMmExNDY5NTdjYzcxMWExNmVkZTc5MWQ1ZmQ1NGExYmI4YjYyMTBiMDA4OTM2MzciLCJpYXQiOjE2NzI0MjY2NTksImV4cCI6MTY3MjQzMDI1OX0.1OPJjKuCg5-7170cB7R_Gfx_m416uhZ_Tm-kXJHRk5w'),
+(1, '213421122', 'asd', 'asd', 'asd@asd.com', '121312312', 'aaa, 1', '1213-111', NULL, '$2b$10$XBcuoGea3.zWCCxECigZFOucgTlue0/wEMKj7Jk96z5baDLg.t4GW', 999, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWRfZ3J1cG8iOjk5OSwiaGFzaGVkUmFuZFN0cmluZyI6ImE4N2FmOTY5NGY3MWQwZmMzNzM4NTUzYzc3OTk0MWFiMjA2MjdkZjk5YmFlZWVkNWFhMDcyYmUwNzQ0MmU4OTciLCJpYXQiOjE2NzI4NDIzOTIsImV4cCI6MTY3Mjg0NTk5Mn0.803Wak7LkhbEHdJfU2qRnc1emztwV5QOMBYaeO_QFjI'),
 (2, '123412412', 'sadas', 'aaa', 'asd@asd.asd', '141112312', 'asda, 11', '2412-111', NULL, '$2b$10$VD1ryi7uXqacFSkBzJWlMuuzWXhEp.I6rJaIRGpEb1tzuKW10B4Pm', 999, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaGFzaGVkUmFuZFN0cmluZyI6IjI4NTMyOWU2N2QyMzRjZjJlZGQ0NGRmZDhiMTQ5ZjkxYTRkMmI2ZTUzNTFhYmQ2NDJiZDA2YTkwMTAwZTA4NTUiLCJpYXQiOjE2NzIyNTI3MDEsImV4cCI6MTY3MjI1NjMwMX0.xIREcqZMGb58NsU3JggIkcFbs9E_TCy88Eg7dAgkD0A');
 
 -- --------------------------------------------------------
@@ -66,17 +66,17 @@ CREATE TABLE `condomino` (
   `email_ocupante` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `id_condominio` int(11) NOT NULL,
-  `fracao` varchar(5) NOT NULL,
   `id_grupo` int(11) NOT NULL DEFAULT 1,
   `auth_token` varchar(500) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `condomino`
 --
 
-INSERT INTO `condomino` (`id`, `nome_ocupante`, `nif_ocupante`, `telemovel_ocupante`, `data_aquisicao`, `data_venda`, `email_ocupante`, `password`, `id_condominio`, `fracao`, `id_grupo`, `auth_token`) VALUES
-(1, 'aaaa', '124121212', '123121333', '2022-12-14', '2022-12-21', 'tlcondominiospt@gmail.com', '$2b$10$3ZSIRfbXQeigennqVDeWVu1e5ECwoJ.6NuSkXiDfHN0b/4kCJ5G0i', 1, 'A', 1, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWRfZ3J1cG8iOjEsImhhc2hlZFJhbmRTdHJpbmciOiJjZTM3ZDYzZDQ4NzBhMDRkNTc1ZTA4YTMyN2RiYmFmODQ3NDFkYjA3M2M5ZTVmMzgwMTUyYmVhYzZiYWI4ZjIyIiwiaWF0IjoxNjcyNDE4MDkzLCJleHAiOjE2NzI0MjE2OTN9.E192TZj3_P6gYk06-JrbK5Gi_EPm7Jf9f5gQPI50wx0');
+INSERT INTO `condomino` (`id`, `nome_ocupante`, `nif_ocupante`, `telemovel_ocupante`, `data_aquisicao`, `data_venda`, `email_ocupante`, `password`, `id_condominio`, `id_grupo`, `auth_token`) VALUES
+(1, 'aaaa', '124121212', '123121333', '2022-12-14', '2022-12-21', 'tlcondominiospt@gmail.com', '$2b$10$3ZSIRfbXQeigennqVDeWVu1e5ECwoJ.6NuSkXiDfHN0b/4kCJ5G0i', 1, 1, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWRfZ3J1cG8iOjEsImhhc2hlZFJhbmRTdHJpbmciOiJjZTM3ZDYzZDQ4NzBhMDRkNTc1ZTA4YTMyN2RiYmFmODQ3NDFkYjA3M2M5ZTVmMzgwMTUyYmVhYzZiYWI4ZjIyIiwiaWF0IjoxNjcyNDE4MDkzLCJleHAiOjE2NzI0MjE2OTN9.E192TZj3_P6gYk06-JrbK5Gi_EPm7Jf9f5gQPI50wx0'),
+(3, 'aa', '212131231', '132132111', '2023-01-01', '2023-01-04', 'aaa@aaa.aaa', '$2b$10$yVbXfQ0lTgXEB/rTLm9b9u/KaogPaSdhTfWT0lK2L84RFC64BXKCe', 1, 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -90,16 +90,17 @@ CREATE TABLE `fracoes` (
   `andar` varchar(20) DEFAULT NULL,
   `escritura` float DEFAULT NULL,
   `estado` varchar(50) NOT NULL DEFAULT 'Livre',
-  `id_condominio` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `id_condominio` int(11) NOT NULL,
+  `id_condomino` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `fracoes`
 --
 
-INSERT INTO `fracoes` (`id`, `tipo`, `andar`, `escritura`, `estado`, `id_condominio`) VALUES
-('A', 'Apartamento', '1ºE', 1, 'Ocupado', 1),
-('B', 'Apartamento', '1º D', 12, 'Livre', 1);
+INSERT INTO `fracoes` (`id`, `tipo`, `andar`, `escritura`, `estado`, `id_condominio`, `id_condomino`) VALUES
+('A', 'Apartamento', '1ºE', 1, 'Ocupado', 1, NULL),
+('B', 'Apartamento', '1º D', 12, 'Ocupado', 1, 3);
 
 -- --------------------------------------------------------
 
@@ -110,7 +111,7 @@ INSERT INTO `fracoes` (`id`, `tipo`, `andar`, `escritura`, `estado`, `id_condomi
 CREATE TABLE `groups` (
   `id` int(11) NOT NULL,
   `name` varchar(45) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `groups`
@@ -129,7 +130,7 @@ INSERT INTO `groups` (`id`, `name`) VALUES
 CREATE TABLE `group_permissions` (
   `group_id` int(11) NOT NULL,
   `permission_id` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `group_permissions`
@@ -141,13 +142,31 @@ INSERT INTO `group_permissions` (`group_id`, `permission_id`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `ocorrencias`
+--
+
+CREATE TABLE `ocorrencias` (
+  `id_condomino` int(11) NOT NULL,
+  `id_condominio` int(11) NOT NULL,
+  `criador` varchar(100) NOT NULL,
+  `data_ocorrencia` date NOT NULL,
+  `origem` varchar(100) NOT NULL,
+  `titulo` varchar(200) NOT NULL,
+  `descricao` text NOT NULL,
+  `info_adicional` varchar(500) DEFAULT NULL,
+  `data_lim_resolucao` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `permissions`
 --
 
 CREATE TABLE `permissions` (
   `id` varchar(50) NOT NULL,
   `description` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `permissions`
@@ -172,7 +191,7 @@ CREATE TABLE `seguro` (
   `telemovel` decimal(9,0) DEFAULT NULL,
   `email` varchar(100) DEFAULT NULL,
   `mediador` varchar(100) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Indexes for dumped tables
@@ -195,16 +214,16 @@ ALTER TABLE `condominio`
 --
 ALTER TABLE `condomino`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `condomino_un` (`id_condominio`,`fracao`),
-  ADD KEY `condomino_FK_1` (`fracao`,`id_condominio`),
-  ADD KEY `condomino_FK` (`id_grupo`);
+  ADD KEY `condomino_FK` (`id_grupo`),
+  ADD KEY `condomino_FK_1` (`id_condominio`);
 
 --
 -- Indexes for table `fracoes`
 --
 ALTER TABLE `fracoes`
   ADD PRIMARY KEY (`id`,`id_condominio`),
-  ADD KEY `fracoes_FK` (`id_condominio`);
+  ADD KEY `fracoes_FK` (`id_condominio`),
+  ADD KEY `fracoes_FK_1` (`id_condomino`);
 
 --
 -- Indexes for table `groups`
@@ -220,6 +239,13 @@ ALTER TABLE `group_permissions`
   ADD PRIMARY KEY (`group_id`,`permission_id`),
   ADD UNIQUE KEY `group_permissions_permission_id_group_id_unique` (`group_id`,`permission_id`),
   ADD KEY `permission_FK_idx` (`permission_id`) USING BTREE;
+
+--
+-- Indexes for table `ocorrencias`
+--
+ALTER TABLE `ocorrencias`
+  ADD KEY `ocorrencias_FK` (`id_condomino`),
+  ADD KEY `ocorrencias_FK_1` (`id_condominio`);
 
 --
 -- Indexes for table `permissions`
@@ -248,7 +274,7 @@ ALTER TABLE `condominio`
 -- AUTO_INCREMENT for table `condomino`
 --
 ALTER TABLE `condomino`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints for dumped tables
@@ -266,13 +292,14 @@ ALTER TABLE `condominio`
 --
 ALTER TABLE `condomino`
   ADD CONSTRAINT `condomino_FK` FOREIGN KEY (`id_grupo`) REFERENCES `groups` (`id`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `condomino_FK_1` FOREIGN KEY (`fracao`,`id_condominio`) REFERENCES `fracoes` (`id`, `id_condominio`);
+  ADD CONSTRAINT `condomino_FK_1` FOREIGN KEY (`id_condominio`) REFERENCES `condominio` (`id`) ON UPDATE CASCADE;
 
 --
 -- Constraints for table `fracoes`
 --
 ALTER TABLE `fracoes`
-  ADD CONSTRAINT `fracoes_FK` FOREIGN KEY (`id_condominio`) REFERENCES `condominio` (`id`) ON UPDATE CASCADE;
+  ADD CONSTRAINT `fracoes_FK` FOREIGN KEY (`id_condominio`) REFERENCES `condominio` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `fracoes_FK_1` FOREIGN KEY (`id_condomino`) REFERENCES `condomino` (`id`) ON UPDATE CASCADE;
 
 --
 -- Constraints for table `group_permissions`
@@ -280,6 +307,13 @@ ALTER TABLE `fracoes`
 ALTER TABLE `group_permissions`
   ADD CONSTRAINT `group_permissions_ibfk_1` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `group_permissions_ibfk_2` FOREIGN KEY (`permission_id`) REFERENCES `permissions` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `ocorrencias`
+--
+ALTER TABLE `ocorrencias`
+  ADD CONSTRAINT `ocorrencias_FK` FOREIGN KEY (`id_condomino`) REFERENCES `condomino` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `ocorrencias_FK_1` FOREIGN KEY (`id_condominio`) REFERENCES `condominio` (`id`) ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
