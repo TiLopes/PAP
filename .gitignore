@@ -2,3 +2,4 @@ node_modules
 backend
 config
 .vscode
+backendv2/helper/sendEmail.js
